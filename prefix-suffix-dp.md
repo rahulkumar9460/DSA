@@ -393,3 +393,97 @@ int maximumSum(vector<int>& arr) {
     return ans;
 }
 ```
+
+---
+
+## 4. Longest Subarray of 1's After Deleting One Element
+
+```
+Given a binary array nums, you should delete one element from it.
+
+Return the size of the longest non-empty subarray containing only 1's in the resulting array. 
+Return 0 if there is no such subarray.
+
+ 
+
+Example 1:
+
+Input: nums = [1,1,0,1]
+Output: 3
+Explanation: After deleting the number in position 2, [1,1,1] contains 3 numbers with value of 1's.
+Example 2:
+
+Input: nums = [0,1,1,1,0,1,1,0,1]
+Output: 5
+Explanation: After deleting the number in position 4, [0,1,1,1,1,1,0,1] longest subarray with value of 1's is [1,1,1,1,1].
+Example 3:
+
+Input: nums = [1,1,1]
+Output: 2
+Explanation: You must delete one element.
+
+1 <= nums.length <= 10^5
+nums[i] is either 0 or 1.
+```
+
+```cpp
+// left[i] -- len of contiguous 1's ending at i
+// right[i] -- len of contiguous 1's starting at i
+// if we delete ith element, effective len = left[i-1] + right[i+1]
+int longestSubarray(vector<int>& nums) {
+    int n = nums.size();
+    if(n == 1) return 0;
+
+    vector<int> left(n, 0), right(n, 0);
+
+    left[0] = (nums[0] == 1) ? 1 : 0;
+    right[n-1] = (nums[n-1] == 1) ? 1 : 0;
+
+    for(int i=1; i<n; i++) {
+        if(nums[i] == 1) 
+            left[i] = left[i-1] + 1;
+    }
+
+    for(int i=n-2; i>=0; i--) {
+        if(nums[i] == 1)    
+            right[i] = right[i+1] + 1;
+    }
+
+    int ans = 0;
+    for(int i=0; i<n; i++) {
+        if(i == 0) ans = max(ans, right[1]);
+        else if(i == n-1) ans = max(ans, left[n-2]);
+        else ans = max(ans, left[i-1] + right[i+1]);
+    }
+
+    return ans;
+}
+```
+
+**It can be solved with sliding window as well with o(1) space
+
+```cpp
+// keep track of number of zeros
+// if number of zeros is greater than one, shrink window from left
+int longestSubarray(vector<int>& nums) {
+    int n = nums.size();
+    if(n == 1) return 0;
+
+    int i = 0, j = 0;
+    int zeros = 0, ans = 0;
+
+    while(j < n) {
+        if(nums[j] == 0) zeros++;
+
+        while(zeros > 1) {
+            if(nums[i] == 0) zeros--;
+            i++;
+        }
+
+        ans = max(ans, j-i);
+        j++;
+    }
+
+    return ans;
+}
+```
