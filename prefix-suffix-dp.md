@@ -460,7 +460,7 @@ int longestSubarray(vector<int>& nums) {
 }
 ```
 
-**It can be solved with sliding window as well with o(1) space
+**It can be solved with sliding window as well with o(1) space**
 
 ```cpp
 // keep track of number of zeros
