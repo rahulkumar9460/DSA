@@ -241,11 +241,11 @@ Example 2:
 
 Input: nums = [-1,1,0,-3,3]
 Output: [0,0,9,0,0]
-```
 
 2 <= nums.length <= 105
 -30 <= nums[i] <= 30
 The input is generated such that answer[i] is guaranteed to fit in a 32-bit integer.
+```
 
 **Can you solve the problem in O(1) extra space complexity?** (The output array does not count as 
 extra space for space complexity analysis.)
