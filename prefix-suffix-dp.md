@@ -237,12 +237,13 @@ Example 1:
 
 Input: nums = [1,2,3,4]
 Output: [24,12,8,6]
+
 Example 2:
 
 Input: nums = [-1,1,0,-3,3]
 Output: [0,0,9,0,0]
 
-2 <= nums.length <= 105
+2 <= nums.length <= 10^5
 -30 <= nums[i] <= 30
 The input is generated such that answer[i] is guaranteed to fit in a 32-bit integer.
 ```
@@ -273,3 +274,53 @@ vector<int> productExceptSelf(vector<int>& nums) {
 
 ---
 
+## 2. Trapping Rain Water
+
+```
+Given n non-negative integers representing an elevation map where the width of each bar is 1, 
+compute how much water it can trap after raining.
+
+ 
+Example 1:
+
+Input: height = [0,1,0,2,1,0,1,3,2,1,2,1]
+Output: 6
+Explanation: The above elevation map (black section) is represented by array [0,1,0,2,1,0,1,3,2,1,2,1]. 
+In this case, 6 units of rain water (blue section) are being trapped.
+
+Example 2:
+
+Input: height = [4,2,0,3,2,5]
+Output: 9
+
+n == height.length
+1 <= n <= 2 * 10^4
+0 <= height[i] <= 10^5
+```
+
+```cpp
+// prefix suffix dp solution takes o(n) extra space to compute lMax[] and rMax[]
+// water[i] = min(leftMax[i], rightMax[i]) - height[i]
+// below is space efficient approch
+int trap(vector<int>& height) {
+    int n = height.size();
+
+    int l=0, r = n-1;
+    int lMax = height[0], rMax = height[n-1];
+    int ans = 0;
+
+    while(l <= r) {
+        if(height[l] <= height[r]) { //left side becomes limiting factor, Even if right side has taller bars later.
+            lMax = max(lMax, height[l]);
+            ans += lMax-height[l];
+            l++;
+        } else { // right side becomes limiting factor, Even if left side has tallers bars later.
+            rMax = max(rMax, height[r]); 
+            ans += rMax-height[r];
+            r--;
+        }
+    }
+
+    return ans;
+}
+```
