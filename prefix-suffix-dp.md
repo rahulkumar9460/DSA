@@ -532,7 +532,12 @@ int longestArithmetic(vector<int>& nums) {
             diff = (nums[i+1] - nums[i-1])/2
             if(diff %2 != 0) not possible
 
-            else possible
+            else {
+                if(nums[i-1]-nums[i-2] == diff) leftLen = left[i-1]
+                if(nums[i+2]-nums[i+1] == diff) rightLen = right[i+1];
+
+                ans = max(ans, leftLen + 1 + rightLen)
+            }
     */
 
     int n = nums.size();
