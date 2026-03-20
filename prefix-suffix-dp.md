@@ -247,7 +247,8 @@ The input is generated such that answer[i] is guaranteed to fit in a 32-bit inte
 
 **Can you solve the problem in O(1) extra space complexity? (The output array does not count as extra space for space complexity analysis.)**
 ```
-```
+
+```cpp
 vector<int> productExceptSelf(vector<int>& nums) {
     int n = nums.size();
     vector<int> ans(n, 1);
