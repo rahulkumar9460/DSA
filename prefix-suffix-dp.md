@@ -635,3 +635,63 @@ int maxScoreSightseeingPair(vector<int>& values) {
     return ans;
 }
 ```
+
+---
+
+# Bonus problems:
+
+## 1. longest proper prefix suffix (KMP algorithm)
+
+```
+Given a string s, of lowercase english alphabets, find the length of the longest proper prefix which is also a suffix.
+Note: Prefix and suffix can be overlapping but they should not be equal to the entire string.
+
+Examples :
+
+Input: s = "abab"
+Output: 2
+Explanation: The string "ab" is the longest prefix and suffix. 
+
+Input: s = "aabcdaabc"
+Output: 4
+Explanation: The string "aabc" is the longest prefix and suffix.
+
+Input: s = "aaaa"
+Output: 3
+Explanation: "aaa" is the longest prefix and suffix. 
+```
+
+
+***Don’t restart matching after mismatch → reuse previous matched info***
+
+```
+lps[i] = longest proper prefix == suffix for substring [0..i]
+Intution: “How much can I reuse if mismatch happens here?”
+```
+
+```cpp
+vector<int> buildLPS(string &p) {
+    int n = p.size();
+    vector<int> lps(n, 0);
+
+    int len = 0; // len of proper prefix which is suffix
+    int i = 1;
+
+    while(i < n) {
+        if(p[i] == p[len]) {
+            len++;
+            lps[i] = len;
+            i++;
+        } else {
+            if(len != 0) {
+                len = lps[len-1];
+            } else {
+                lps[i] = 0;
+                i++;
+            }
+        }
+    }
+    return lps;
+}
+```
+
