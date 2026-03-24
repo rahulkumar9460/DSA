@@ -717,6 +717,13 @@ Explanation: "For" is present as substring in "GeeksForGeeks" from index 5 (0 ba
 ```
 
 ```
+Brute force:
+start i = 0, j = 0;
+
+if txt[i] != pat[j] ==> make i = 1 and j = 0
+
+instead of resetting i and j everytime mismatch occurs, can we do something better?
+
 Intuition:
 Make lps of pattern
 
