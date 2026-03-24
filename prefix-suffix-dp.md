@@ -667,6 +667,10 @@ Explanation: "aaa" is the longest prefix and suffix.
 ```
 lps[i] = longest proper prefix == suffix for substring [0..i]
 Intution: “How much can I reuse if mismatch happens here?”
+
+When mismatch happens:
+We don't go to 0
+We go to "largest valid prefix that is also suffix"
 ```
 
 ```cpp
