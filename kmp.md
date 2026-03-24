@@ -215,9 +215,8 @@ Input: s = "abcd"
 Output: "dcbabcd"
 ```
 
+**Intuition:**
 ```
-Intuition: 
-
 We need to find longest prefix which is palindrome -- lpp
 then we can just add remaining part at the front of s
 
@@ -233,9 +232,8 @@ rev_s.substr(0, rev_s.size()-m) = "dcb"
 ans = "d" + s = dcbabcd
 ```
 
+**How to find lpp in linear time?**
 ```
-How to find lpp in linear time?
-
 take string p = s + "#" + rev(s) = a b c d # d c b a
 find lps in string P
 ```
