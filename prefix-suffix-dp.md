@@ -838,3 +838,72 @@ bool repeatedSubstringPattern(string s) {
     return sub.find(s) != string::npos; // use KMP to find if s is substr of p
 }
 ```
+
+---
+
+## 4.  Shortest Palindrome
+
+```
+You are given a string s. You can convert s to a palindrome by adding characters in front of it.
+Return the shortest palindrome you can find by performing this transformation.
+
+ 
+Example 1:
+Input: s = "aacecaaa"
+Output: "aaacecaaa"
+
+Example 2:
+Input: s = "abcd"
+Output: "dcbabcd"
+```
+
+```
+Intuition: 
+
+We need to find longest prefix which is palindrome -- lpp
+then we can just add remaining part at the front of s
+
+if length of longest prefix which is palindrome = m;
+ans = rev_s.substr(0, rev_s.size()-m) + s
+
+Ex: abcd
+string lpp = "a"
+m = lpp.size() = 1
+
+rev_s.substr(0, rev_s.size()-m) = "dcb"
+
+ans = "d" + s = dcbabcd
+```
+
+```
+How to find lpp in linear time?
+
+take string p = s + "#" + rev(s) = a b c d # d c b a
+find lps in string P
+```
+
+```cpp
+string shortestPalindrome(string s) {
+    /*
+        s = abcd
+        // we need: Longest prefix of s which is already a palindrome
+        // we can add rest of path to front and overall string becomes palindrome
+
+        s + "#" + rev(s) = abcd#dcba
+        lps = 0, 0, 0, 0, 0, 0, 0, 0, 0, 1
+
+        remove last 1 characters from rev(s)
+        rev(s) = dcb
+
+        return rev(s) + s = dcbabcd
+    */
+    string revStr = s;
+    reverse(revStr.begin(), revStr.end());
+
+    string p = s + "#" + revStr;
+    vector<int> lps = buildLps(p);
+    int m = lps[p.size()-1];
+
+    return revStr.substr(0, revStr.size()-m) + s;
+}
+```
