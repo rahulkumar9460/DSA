@@ -1,3 +1,15 @@
+# KMP algorithm
+
+**KMP appears when:**
+
+1. Prefix == suffix
+2. Pattern repetition
+3. Palindrome
+4. Avoid recomputation
+5. Overlapping substrings
+
+---
+
 ## 1. longest proper prefix suffix (KMP algorithm)
 
 ```
@@ -130,33 +142,67 @@ and starting matching from index = 2
 
 ```cpp
 int firstOccurence(string& txt, string& pat) {
-        vector<int> lps = buildLps(pat);
-        
-        int n = txt.size(), m = pat.size();
-        int i = 0, j = 0;
-        
-        while(i < n) {
-            if(txt[i] == pat[j]) {
-                i++;
-                j++;
+    vector<int> lps = buildLps(pat);
+    
+    int n = txt.size(), m = pat.size();
+    int i = 0, j = 0;
+    
+    while(i < n) {
+        if(txt[i] == pat[j]) {
+            i++;
+            j++;
+        } else {
+            if(j != 0) {
+                j = lps[j-1];
             } else {
-                if(j != 0) {
-                    j = lps[j-1];
-                } else {
-                    i++;
-                }
+                i++;
             }
-            
-            if(j == m) return i-m; 
         }
         
-        return -1;
+        if(j == m) return i-m; 
     }
+    
+    return -1;
+}
 ```
 
 ---
 
-## 3. Repeated Substring Pattern
+## 3.  Count occurrences of pattern in text
+
+```
+string txt = "heyihebyehey";
+string pat = "hey";
+
+ans = 0, 9
+```
+
+```cpp
+vector<int> allOccurances(string &txt, string &pat) {
+    int n = txt.size(), m = pat.size();
+
+    vector<int> lps = buildLPS(pat);
+
+    int i = 0, j = 0;
+    vector<int> ans;
+
+    while(i < n) {
+        if(txt[i] == pat[j]) {
+            i++;
+            j++;
+        } else {
+            if(j != 0) j = lps[j-1];
+            else i++;
+        }
+
+        if(j == m) ans.push_back(i-m);
+    }
+
+    return ans;
+}
+```
+
+## 4. Repeated Substring Pattern
 
 ```
 Given a string s, check if it can be constructed by taking a substring of it and appending multiple copies of the substring together.
@@ -199,7 +245,7 @@ bool repeatedSubstringPattern(string s) {
 
 ---
 
-## 4.  Shortest Palindrome
+## 5.  Shortest Palindrome
 
 ```
 You are given a string s. You can convert s to a palindrome by adding characters in front of it.
