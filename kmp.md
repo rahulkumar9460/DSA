@@ -74,15 +74,17 @@ Output: 5
 Explanation: "For" is present as substring in "GeeksForGeeks" from index 5 (0 based indexing).
 ```
 
+**Brute force:**
 ```
-Brute force:
 start i = 0, j = 0;
 
 if txt[i] != pat[j] ==> make i = 1 and j = 0
 
 instead of resetting i and j everytime mismatch occurs, can we do something better?
+```
 
-Intuition:
+**Intuition:**
+```
 Make lps of pattern
 
 Ex: 
@@ -160,7 +162,6 @@ int firstOccurence(string& txt, string& pat) {
 Given a string s, check if it can be constructed by taking a substring of it and appending multiple copies of the substring together.
 
  
-
 Example 1:
 Input: s = "abab"
 Output: true
@@ -176,9 +177,8 @@ Output: true
 Explanation: It is the substring "abc" four times or the substring "abcabc" twice.
 ```
 
+**Approach:**
 ```
-Approach:
-
 s = "abab"
 doubled = s + s = "abababab"
 remove first and last character from doubled
