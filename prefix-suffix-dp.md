@@ -699,3 +699,91 @@ vector<int> buildLPS(string &p) {
 }
 ```
 
+---
+
+## 2. First Occurence of pattern string in text string
+
+```
+Given two strings txt and pat, return index of the first occurrence of string pat in txt. If pat is not found, return -1.
+
+Examples :
+Input: txt = "GeeksForGeeks", pat = "Fr"
+Output: -1
+Explanation: "Fr" is not present in the string "GeeksForGeeks" as substring.
+
+Input: txt = "GeeksForGeeks", pat = "For"
+Output: 5
+Explanation: "For" is present as substring in "GeeksForGeeks" from index 5 (0 based indexing).
+```
+
+```
+Intuition:
+Make lps of pattern
+
+Ex: 
+txt = "abxabcabcaby"
+pat = "abcaby"
+
+lps of pat = {0, 0, 0, 1, 2, 0}
+
+i → txt
+j → pat
+
+i=0, j=0 → a == a ✅
+i=1, j=1 → b == b ✅
+i=2, j=2 → x != c ❌
+
+Mismatch at j = 2
+Instead of restarting j = 0, we do: j = lps[j-1] = lps[1] = 0
+
+We already matched "ab"
+what part of "ab" we can reuse?
+
+None... since for "ab" lps is 0
+so j = 0;
+
+i=2, j=0 → x != a → move i
+i=3, j=0 → a == a ✅
+i=4, j=1 → b == b ✅
+i=5, j=2 → c == c ✅
+i=6, j=3 → a == a ✅
+i=7, j=4 → b == b ✅
+i=8, j=5 → c != y ❌
+
+We already matched "abcab"
+lps = 2 which is "ab"
+
+so no need to look for "ab" again in text
+make j = lps[j-1] = 2
+and starting matching from index = 2
+.
+.
+.
+```
+
+```cpp
+int firstOccurence(string& txt, string& pat) {
+        vector<int> lps = buildLps(pat);
+        
+        int n = txt.size(), m = pat.size();
+        int i = 0, j = 0;
+        
+        while(i < n) {
+            if(txt[i] == pat[j]) {
+                i++;
+                j++;
+            } else {
+                if(j != 0) {
+                    j = lps[j-1];
+                } else {
+                    i++;
+                }
+            }
+            
+            if(j == m) return i-m; 
+        }
+        
+        return -1;
+    }
+```
+
