@@ -309,3 +309,47 @@ string shortestPalindrome(string s) {
     return revStr.substr(0, revStr.size()-m) + s;
 }
 ```
+
+## 6. String A is rotation of String B
+
+```
+Given two strings A and B. Return true if A is a rotation of B, false otherwise.
+Rotation of B means pick first element from B and put it at the end of B and keep doing it.
+
+Example 1:
+Input: A = "abcfd", B = "fdabc"
+Output: true
+
+Example 2:
+Input: A = "abcfd", B = "dfabc"
+Output: false
+```
+
+**Intution**
+
+```
+A is a rotation of B is A is a substring if B+B.
+
+Input: A = "abcfd", B = "fdabc"
+BB = "fdabcfdabc" --> A is a substring
+
+Input: A = "abcfd", B = "dfabc"
+BB = "dfabcdfabc" --> B is not a substring
+
+```
+
+```cpp
+bool isRotation(string &a, string &b) {
+    string bb = b+b;
+
+    return bb.find(a) != string::npos;
+}
+
+// If we are given two array and need to find if A is rotation of B
+bool isRotation(vector<int> &a, vector<int> &b) {
+    vector<int> bb = b;
+    for(int bItem: b) bb.push_back(bItem);
+
+    return search(bb.begin(), bb.end(), a.begin(), a.end()) != bb.end(); // this is actually o(n^2) --> use KMP instead
+}
+```
