@@ -218,7 +218,7 @@ Constraints:
     At most 5 * 104 calls will be made to addNum and findMedian.
 ```
 
-**Intuituion**
+**Intuition**
 ```
 To find the median we need:
     1. Highest element from left half
@@ -230,6 +230,7 @@ strategy:
     -- maxHeap, minHeap
     -- maxHeap stores the extra one element if total number of elements is odd
     -- Do this while inserting:
+        -- push element to maxheap
         -- if maxHeap.size() > minHeap.size() ==> push element to minHeap
         -- if minHeap.size() > maxHeap.size() ==> push element to maxHeap
 
