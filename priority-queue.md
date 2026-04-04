@@ -321,6 +321,16 @@ Example 2:
 
 **Intuition**
 ```diff
+So in one cycle of tasks there has to be n+1 distinct tasks,
+if not then for remaining time the cpu will be idle
+
+we will make each cycle one by one greedely
+each cycle will have (n+1) most frequent distinct tasks, if there are no (n+1)
+distinct tasks then add idle task
+
+            A -> B -> idle -> A -> B -> idle -> A -> B.
+            <------------->.  <------------->.  <----->
+
 + CPU Cycle size = n+1
 
 + Each cycle:
@@ -328,4 +338,37 @@ Example 2:
     run them
     if not enough → idle fills
 
++ Greedy + Max Heap + Process in cycles of size (n+1)
+```
+
+```cpp
+int leastInterval(vector<char>& tasks, int n) {
+    unordered_map<char, int> mp;
+    for(char &t: tasks) mp[t]++;
+
+    priority_queue<pair<int, char>> pq;
+    for(auto &[task, freq]: mp) pq.push({freq, task});
+
+    int ans = 0;
+    while(!pq.empty()) {
+        vector<pair<int, char>> v;
+
+        int count = 0;
+        // CPU cycle of size n+1
+        while(!pq.empty() && count <= n) {
+            auto [freq, task] = pq.top();
+            pq.pop();
+            count++;
+
+            if(freq > 1) v.push_back({freq-1, task});
+        }
+
+        if(v.size() == 0) ans += count; // last cycle case
+        else ans += (n+1);
+
+        for(auto t : v) pq.push(t);
+    }
+
+    return ans;
+}
 ```
