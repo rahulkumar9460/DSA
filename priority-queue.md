@@ -608,3 +608,58 @@ public:
     }
 };
 ```
+
+## 9. Merge k Sorted Lists
+```diff
+You are given an array of k linked-lists lists, each linked-list is sorted in ascending order.
+
+Merge all the linked-lists into one sorted linked-list and return it.
+
+ 
+
++ Example 1:
+    Input: lists = [[1,4,5],[1,3,4],[2,6]]
+    Output: [1,1,2,3,4,4,5,6]
+
++Explanation: The linked-lists are:
+    [
+        1->4->5,
+        1->3->4,
+        2->6
+    ]
+    merging them into one sorted linked list:
+    1->1->2->3->4->4->5->6
+```
+
+```cpp
+ListNode* mergeKLists(vector<ListNode*>& lists) {
+    // put first node of each list into minHeap
+    // take min element and put next of it
+    priority_queue<pair<int, ListNode*>, vector<pair<int, ListNode*>>, greater<pair<int, ListNode*>>>pq;
+
+    for(ListNode* l : lists) {
+        if(l) 
+            pq.push({l->val, l});
+    } 
+
+    ListNode* ans = NULL;
+    ListNode* tail = NULL;
+
+    while(!pq.empty()) {
+        auto [val, node] = pq.top();
+        pq.pop();
+
+        if(!ans) {
+            ans = node;
+            tail = ans;
+        } else {
+            tail->next = node;
+            tail = tail->next;
+        }
+
+        if(node->next) pq.push({node->next->val, node->next});
+    } 
+
+    return ans;
+}
+```
