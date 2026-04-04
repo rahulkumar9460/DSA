@@ -319,11 +319,11 @@ Example 2:
     With a cooling interval of 1, you can repeat a task after just one other task.
 ```
 
-**Intuition
+**Intuition**
 ```diff
-CPU Cycle size = n+1
++ CPU Cycle size = n+1
 
-Each cycle:
++ Each cycle:
     pick top (n+1) tasks
     run them
     if not enough → idle fills
