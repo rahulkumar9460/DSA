@@ -542,3 +542,69 @@ Explanation: Events in chronological order go as follows:
 - At second 5, task 5 is added and processed using server 3 until second 7.
 - At second 6, task 6 is added and processed using server 2 until second 7.
 ```
+
+**Approach**
+```diff
++ Maintain two priority queues: one for available servers and one for busy servers
++ Initially all server are put into available queue
++ As time goes by, first check if any server from busy queue is free now
++ If Yes push that server back into available server
++ For the current task pick top server from available queue
+
+This is a classic dual heap scheduling pattern:
+
+Recognize this when:
+    Tasks arrive over time
+    Resources get busy and free later
+    Need to simulate time
+```
+
+```cpp
+class Compare {
+public:
+    bool operator()(pair<int,int>&a, pair<int,int>&b) {
+        if(a.first == b.first) return a.second > b.second;
+        else return a.first > b.first;
+    }
+};
+
+class Solution {
+public:
+    vector<int> assignTasks(vector<int>& servers, vector<int>& tasks) {
+        priority_queue<pair<int, int>, vector<pair<int,int>>, Compare> avaServers; // minHeap
+        for(int i=0; i<servers.size(); i++) avaServers.push({servers[i], i});
+
+        priority_queue<pair<int, int>, vector<pair<int,int>>, Compare> busyServers; // minHeap
+
+        vector<int> ans;
+        long long currTime = 0;
+        int i = 0;
+        while(i<tasks.size()) {
+            int t = tasks[i];
+            currTime = max(currTime, (long long)i);
+
+            while(!busyServers.empty() && busyServers.top().first <= currTime) {
+                auto [finishTime, idx] = busyServers.top();
+                busyServers.pop();
+
+                avaServers.push({servers[idx], idx});
+            }
+
+            // if no server available → jump time
+            if(avaServers.empty()) {
+                currTime = busyServers.top().first;
+                continue;
+            }
+
+            auto [avs, idx] = avaServers.top();
+            avaServers.pop();
+
+            busyServers.push({currTime+t, idx});
+            ans.push_back(idx);
+            i++;
+        }
+
+        return ans;
+    }
+};
+```
