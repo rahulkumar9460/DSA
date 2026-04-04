@@ -195,3 +195,95 @@ vector<int> findClosestElements(vector<int>& arr, int k, int x) {
     return ans;
 }
 ```
+
+## 4. Find Median from Data Stream
+```
+The median is the middle value in an ordered integer list. If the size 
+of the list is even, there is no middle value, and the median is the 
+mean of the two middle values.
+
+For example, for arr = [2,3,4], the median is 3.
+For example, for arr = [2,3], the median is (2 + 3) / 2 = 2.5.
+
+Implement the MedianFinder class:
+
+    MedianFinder() initializes the MedianFinder object.
+    void addNum(int num) adds the integer num from the data stream to the data structure.
+    double findMedian() returns the median of all elements so far. 
+        Answers within 10^-5 of the actual answer will be accepted.
+
+Constraints:
+    -10^5 <= num <= 10^5
+    There will be at least one element in the data structure before calling findMedian.
+    At most 5 * 104 calls will be made to addNum and findMedian.
+```
+
+**Intuituion**
+```
+To find the median we need:
+    1. Highest element from left half
+    2. And smallest element from right half
+
+we can maintain to heaps each giving us above
+
+strategy:
+    -- maxHeap, minHeap
+    -- maxHeap stores the extra one element if total number of elements is odd
+    -- Do this while inserting:
+        -- if maxHeap.size() > minHeap.size() ==> push element to minHeap
+        -- if minHeap.size() > maxHeap.size() ==> push element to maxHeap
+
+example:
+    arr = [2, 3, 4, 5, 6]
+    maxHeap = {}, minHeap = {}
+
+itr 1:
+    maxHeap = {2}, minHeap = {} ==> median = 2
+itr 2:
+    maxHeap = {2, 3}, minHeap = {}
+    maxHeap = {2}, minHeap = {3} ==> median = (2+3)/2 = 2.5
+itr 3:
+    maxheap = {2, 4}, minHeap = {3}
+    maxHeap = {2}, minHeap = {3, 4}
+    maxHeap = {2, 3}, minHeap = {4} ==> median = 3
+itr 4:
+    maxheap = {2, 3, 5}, minHeap = {4}
+    maxHeap = {2, 3}, minHeap = {4, 5} ==> median = (3+4)/2 = 3.5
+itr 5:
+    maxheap = {2, 3, 6}, minHeap = {4, 5}
+    maxHeap = {2, 3}, minHeap = {4, 5, 6}
+    maxHeap = {2, 3, 4}, minHeap = {5, 6} ==> median = 4
+```
+
+```cpp
+class MedianFinder {
+public:
+    priority_queue<int> maxHeap;
+    priority_queue<int, vector<int>, greater<int>> minHeap;
+
+    MedianFinder() {
+        
+    }
+    
+    void addNum(int num) {
+        maxHeap.push(num);
+
+        if(maxHeap.size() > minHeap.size()) {
+            minHeap.push(maxHeap.top());
+            maxHeap.pop();
+        }
+
+        if(minHeap.size() > maxHeap.size()) {
+            maxHeap.push(minHeap.top());
+            minHeap.pop();
+        }
+    }
+    
+    double findMedian() {
+        if(maxHeap.size() == minHeap.size())
+            return (maxHeap.top() + minHeap.top()) / double(2); 
+        
+        return maxHeap.top();
+    }
+};
+```
