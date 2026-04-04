@@ -372,3 +372,137 @@ int leastInterval(vector<char>& tasks, int n) {
     return ans;
 }
 ```
+
+## 6. Reorganize String
+```diff
+Given a string s, rearrange the characters of s so that any two adjacent characters are not the same.
+
+Return any possible rearrangement of s or return "" if not possible.
+
++ Example 1:
+    Input: s = "aab"
+    Output: "aba"
+
++ Example 2:
+    Input: s = "aaab"
+    Output: ""
+```
+
+**Greedely pick highest two frequent element**
+```cpp
+string reorganizeString(string s) {
+    unordered_map<int, int> mp;
+    for(char c : s) mp[c]++;
+
+    priority_queue<pair<int, char>> pq;
+    for(auto &[c, freq]: mp) pq.push({freq, c});
+
+    string ans = "";
+    while(!pq.empty()) {
+        auto [f1, c1] = pq.top();
+        pq.pop();
+        ans += c1;
+
+        if(pq.empty()) {
+            if(f1 > 1) return "";
+            else break;
+        }
+
+        auto [f2, c2] = pq.top();
+        pq.pop();
+        ans += c2;
+
+        if(f2 > 1) pq.push({f2-1, c2});
+        if(f1 > 1) pq.push({f1-1, c1});
+    }
+
+    return ans;
+}
+```
+
+## 7. Single-Threaded CPU
+```diff
+You are given n​​​​​​ tasks labeled from 0 to n - 1 represented by a 2D integer array tasks, 
+where tasks[i] = [enqueueTimei, processingTimei] means that the i​​​​​​th​​​​ task will be 
+available to process at enqueueTimei and will take processingTimei to finish processing.
+
+You have a single-threaded CPU that can process at most one task at a time and will act in the following way:
+
++ If the CPU is idle and there are no available tasks to process, the CPU remains idle.
++ If the CPU is idle and there are available tasks, the CPU will choose the one with 
+
+the shortest processing time. If multiple tasks have the same shortest processing 
+time, it will choose the task with the smallest index.
+
++ Once a task is started, the CPU will process the entire task without stopping.
++ The CPU can finish a task then start a new one instantly.
++ Return the order in which the CPU will process the tasks.
+
+Example 1:
+Input: tasks = [[1,2],[2,4],[3,2],[4,1]]
+Output: [0,2,3,1]
+Explanation: The events go as follows: 
+
+- At time = 1, task 0 is available to process. Available tasks = {0}.
+- Also at time = 1, the idle CPU starts processing task 0. Available tasks = {}.
+- At time = 2, task 1 is available to process. Available tasks = {1}.
+- At time = 3, task 2 is available to process. Available tasks = {1, 2}.
+- Also at time = 3, the CPU finishes task 0 and starts processing task 2 as it is the shortest. Available tasks = {1}.
+- At time = 4, task 3 is available to process. Available tasks = {1, 3}.
+- At time = 5, the CPU finishes task 2 and starts processing task 3 as it is the shortest. Available tasks = {1}.
+- At time = 6, the CPU finishes task 3 and starts processing task 1. Available tasks = {}.
+- At time = 10, the CPU finishes task 1 and becomes idle.
+```
+
+**Intuition**
+```diff
++ Keep track of time: currTime
++ Maintain a maxHeap to store procTime and index
++ Push all tasks if enqueueTime <= currTime
++ Pick top element from heap and process that task
++ Now currTime = currTime + pq.top().procTime
+```
+
+```cpp
+vector<int> getOrder(vector<vector<int>>& tasks) {
+
+    // We Need one more vector to store the original indicies
+    vector<vector<int>> t;
+    for(int i=0; i<tasks.size(); i++)
+        t.push_back({tasks[i][0], tasks[i][1], i});
+    
+    sort(t.begin(), t.end()); // sort based on enque time
+
+    priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int,int>>> pq;
+    vector<int> ans;
+    int i = 0;
+    long long currTime = t[0][0];
+
+    while(i < t.size()) {
+        // ⛔ Key: jump time if nothing to process
+        if(pq.empty() && currTime < t[i][0]) {
+            currTime = t[i][0];
+        }
+
+        while(i < t.size() && t[i][0] <= currTime) {
+            pq.push({t[i][1], t[i][2]});
+            i++;
+        }
+
+        // pick task with minimum proc time
+        auto [procTime, idx] = pq.top();
+        pq.pop();
+
+        ans.push_back(idx);
+        currTime += procTime;
+    }
+
+    while(!pq.empty()) {
+        auto [procTime, idx] = pq.top();
+        pq.pop();
+        ans.push_back(idx);
+    }
+
+    return ans;
+}
+```
