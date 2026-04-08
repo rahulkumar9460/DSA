@@ -68,6 +68,8 @@ Pattern 4: Lazy deletion
     Mark invalid and skip later
 ```
 
+**Do I need the best element repeatedly while data keeps changing? --> if YES --> use priority_queue**
+
 # Problems:
 
 ## 1. Kth largest element
@@ -719,7 +721,7 @@ vector<vector<int>> kSmallestPairs(vector<int>& nums1, vector<int>& nums2, int k
     priority_queue<pair<int, pair<int,int>>, 
         vector<pair<int, pair<int,int>>>, 
         greater<pair<int, pair<int,int>>>> pq;
-        
+
     // initialize with first column
     for(int i = 0; i < min(n, k); i++) {
         pq.push({nums1[i] + nums2[0], {i, 0}});
@@ -740,5 +742,73 @@ vector<vector<int>> kSmallestPairs(vector<int>& nums1, vector<int>& nums2, int k
     }
 
     return ans;
+}
+```
+
+## 10. IPO
+```diff
+You have:
+    capital[i] → minimum capital required to start project
+    profit[i] → profit you gain after finishing it
+    w → current capital
+    k → max projects you can do
+
+    👉 Goal: maximize final capital
+
++Example 1:
+    Input: k = 2, w = 0, profits = [1,2,3], capital = [0,1,1]
+    Output: 4
+    Explanation: Since your initial capital is 0, you can only start the project indexed 0.
+    After finishing it you will obtain profit 1 and your capital becomes 1.
+    With capital 1, you can either start the project indexed 1 or the project indexed 2.
+    Since you can choose at most 2 projects, you need to finish the project indexed 2 to get the maximum capital.
+    Therefore, output the final maximized capital, which is 0 + 1 + 3 = 4.
+
++Example 2:
+    Input: k = 3, w = 0, profits = [1,2,3], capital = [0,1,2]
+    Output: 6
+
+```
+
+**Intuition**
+```diff
++At any moment:
+    You can only pick projects where capital[i] <= w
+
++So:
+    Filter feasible projects
+    From them → pick max profit
+
++👉 That’s two separate concerns → two heaps
+```
+
+```cpp
+int findMaximizedCapital(int k, int w, vector<int>& profits, vector<int>& capital) {
+    int n = profits.size();
+    priority_queue<pair<int,int>, vector<pair<int,int>>, greater<pair<int,int>>> allProjects; //minHeap
+    priority_queue<pair<int,int>> unlockedProjects; //maxHeap
+
+    for(int i=0; i<n; i++)
+        allProjects.push({capital[i], profits[i]});
+
+    while(k--) {
+        // check if we can unlock projects based on current capital
+        while(!allProjects.empty() && allProjects.top().first <= w) {
+            auto [c, p] = allProjects.top();
+            allProjects.pop();
+
+            unlockedProjects.push({p, c});
+        }
+
+        // pick max profit
+        if(!unlockedProjects.empty()) {
+            auto [p, c] = unlockedProjects.top();
+            unlockedProjects.pop();
+
+            w += p;
+        }
+    }
+
+    return w;
 }
 ```
