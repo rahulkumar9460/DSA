@@ -68,7 +68,6 @@ repeatedly finding min/max → O(n²)
 > Pattern 4: Lazy deletion
 - When removal is expensive
 - Mark invalid and skip later
-```
 
 ---
 
