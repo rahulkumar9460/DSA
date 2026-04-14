@@ -337,26 +337,27 @@ least n intervals between two tasks with the same label.
 ```
 
 **Intuition**
-```diff
+
 So in one cycle of tasks there has to be n+1 distinct tasks,
 if not then for remaining time the cpu will be idle
 
-+ we will make each cycle one by one greedely
-each cycle will have (n+1) most frequent distinct tasks, if there are no (n+1)
-distinct tasks then add idle task
+> [!IMPORTANT]
+> - we will make each cycle one by one greedely
+> - each cycle will have (n+1) most frequent distinct tasks, if there are no (n+1)
+>   distinct tasks then add idle task
+>
+>           A -> B -> idle -> A -> B -> idle -> A -> B.
+>            <------------->.  <------------->.  <----->
+>
+> CPU Cycle size = n+1
+>
+> Each cycle:
+> 1. pick top (n+1) tasks
+> 2. run them
+> 3. if not enough → idle fills
+>
+> **Greedy + Max Heap + Process in cycles of size (n+1)**
 
-            A -> B -> idle -> A -> B -> idle -> A -> B.
-            <------------->.  <------------->.  <----->
-
-+ CPU Cycle size = n+1
-
-+ Each cycle:
-    pick top (n+1) tasks
-    run them
-    if not enough → idle fills
-
-+ Greedy + Max Heap + Process in cycles of size (n+1)
-```
 
 ```cpp
 int leastInterval(vector<char>& tasks, int n) {
