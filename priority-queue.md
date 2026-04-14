@@ -740,7 +740,7 @@ Example:
 > - Instead of expanding both directions, use this:
 > -  Fix i, only expand j
 > 
-> **Optimal Approach (Best-First Search Pattern)**
+>       **Optimal Approach (Best-First Search Pattern)**
 > 
 > Idea:
 > - Start with (i, 0) for all i
@@ -804,17 +804,19 @@ You have:
 
 ```
 
-**Intuition**
-```diff
-+At any moment:
-    You can only pick projects where capital[i] <= w
+### Intuition
 
-+So:
-    Filter feasible projects
-    From them → pick max profit
+> [!IMPORTANT]
+> At any moment:
+> - You can only pick projects where capital[i] <= w
+>
+> So:
+> - Filter feasible projects
+> - From them → pick max profit
+>
+>       👉 That’s two separate concerns → two heaps
+> 
 
-+👉 That’s two separate concerns → two heaps
-```
 
 ```cpp
 int findMaximizedCapital(int k, int w, vector<int>& profits, vector<int>& capital) {
