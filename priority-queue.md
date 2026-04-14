@@ -476,14 +476,15 @@ Explanation: The events go as follows:
 - At time = 10, the CPU finishes task 1 and becomes idle.
 ```
 
-**Intuition**
-```diff
-+ Keep track of time: currTime
-+ Maintain a maxHeap to store procTime and index
-+ Push all tasks if enqueueTime <= currTime
-+ Pick top element from heap and process that task
-+ Now currTime = currTime + pq.top().procTime
-```
+### Intuition
+
+> [!IMPORTANT]
+> Keep track of time: currTime
+> Maintain a maxHeap to store procTime and index
+> Push all tasks if enqueueTime <= currTime
+> Pick top element from heap and process that task
+> Now currTime = currTime + pq.top().procTime
+
 
 ```cpp
 vector<int> getOrder(vector<vector<int>>& tasks) {
@@ -567,21 +568,22 @@ Explanation: Events in chronological order go as follows:
 - At second 6, task 6 is added and processed using server 2 until second 7.
 ```
 
-**Approach**
-```diff
-+ Maintain two priority queues: one for available servers and one for busy servers
-+ Initially all server are put into available queue
-+ As time goes by, first check if any server from busy queue is free now
-+ If Yes push that server back into available server
-+ For the current task pick top server from available queue
+### Approach
 
-This is a classic dual heap scheduling pattern:
+> [!IMPORTANT]
+> 1. Maintain two priority queues: one for available servers and one for busy servers
+> 2. Initially all server are put into available queue
+> 3. As time goes by, first check if any server from busy queue is free now
+> 4. If Yes push that server back into available server
+> 5. For the current task pick top server from available queue
+>
+>   **This is a classic dual heap scheduling pattern:**
+>
+> Recognize this when:
+> - Tasks arrive over time
+> - Resources get busy and free later
+> - Need to simulate time
 
-Recognize this when:
-    Tasks arrive over time
-    Resources get busy and free later
-    Need to simulate time
-```
 
 ```cpp
 class Compare {
@@ -712,12 +714,14 @@ Define a pair (u, v) which consists of one element from the first array and one 
                 [1,1],[1,1],[1,2],[2,1],[1,2],[2,2],[1,3],[1,3],[2,3]
 ```
 
-**Intuition (Best-First Search Pattern)**
-```diff
-+ Use minHeap with {sum, {i, j}}
-+ if we expand with (i+1, j) and (i, j+1)
-- But there’s no visited tracking, so same pair can be pushed multiple times.
+### Intuition (Best-First Search Pattern)
 
+> [!IMPORTANT]
+> - Use minHeap with {sum, {i, j}}
+> - if we expand with (i+1, j) and (i, j+1)
+> - But there’s no visited tracking, so same pair can be pushed multiple times.
+
+```diff
 Example:
     From (0,0):
     push (1,0) and (0,1)
@@ -726,19 +730,21 @@ Example:
         (1,0) pushes (1,1)
         (0,1) also pushes (1,1) ❌ duplicate
 
--👉 This leads to:
-    repeated work
-    incorrect ordering sometimes
-    TLE in worst case
-
-+Instead of expanding both directions, use this:
-+👉 Fix i, only expand j
-
-+Optimal Approach (Best-First Search Pattern)
-Idea:
-    Start with (i, 0) for all i
-    Always expand (i, j+1)
+- This leads to:
+    - repeated work
+    - incorrect ordering sometimes
+    - TLE in worst case
 ```
+
+> [!TIP]
+> - Instead of expanding both directions, use this:
+> -  Fix i, only expand j
+> 
+> **Optimal Approach (Best-First Search Pattern)**
+> 
+> Idea:
+> - Start with (i, 0) for all i
+> - Always expand (i, j+1)
 
 ```cpp
 vector<vector<int>> kSmallestPairs(vector<int>& nums1, vector<int>& nums2, int k) {
