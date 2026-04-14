@@ -1,3 +1,8 @@
+<p align="left">
+  <img src="https://img.shields.io/badge/Pattern-Heap-blue"/>
+  <img src="https://img.shields.io/badge/Difficulty-Medium-yellow"/>
+</p>
+
 # Priority queue
 
 **How to Identify Priority Queue Pattern**
