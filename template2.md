@@ -34,6 +34,8 @@ Explain your thought process here.
 > [!TIP]
 > Think about what brute force would do first before optimizing.
 
+> **Tip:** Fixed-size heap is useful when only top-k matters.
+
 ---
 
 ## 🎯 Pattern
