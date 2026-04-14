@@ -94,13 +94,13 @@ Example 2:
     Output: 4
 ```
 
-```
-If we sort the entire array the time complexity will be O(nlogn)
-But if we keep track of only top K element the time will be O(nlogk)
+> [!NOTE]
+> If we sort the entire array the time complexity will be O(nlogn)
+> But if we keep track of only top K element the time will be O(nlogk)
 
-Use min heap --> min element at top
-if heap's size > k then we can safely erase the top element (current smallest)
-```
+> [!IMPORTANT]
+> Use min heap --> min element at top
+> if heap's size > k then we can safely erase the top element (current smallest)
 
 ```cpp
 int findKthLargest(vector<int>& nums, int k) {
@@ -115,6 +115,8 @@ int findKthLargest(vector<int>& nums, int k) {
     // Use max heap if need to find the kth smallestTop K Frequent Elements
 }
 ```
+
+---
 
 ## 2. Top K Frequent Elements
 ```
@@ -155,6 +157,8 @@ vector<int> topKFrequent(vector<int>& nums, int k) {
     return ans;
 }
 ```
+
+---
 
 ## 3. Find K Closest Elements
 ```
@@ -203,6 +207,8 @@ vector<int> findClosestElements(vector<int>& arr, int k, int x) {
     return ans;
 }
 ```
+
+---
 
 ## 4. Find Median from Data Stream
 ```
@@ -297,6 +303,8 @@ public:
 };
 ```
 
+---
+
 ## 5. Task Scheduler
 ```diff
 You are given an array of CPU tasks, each labeled with a letter from A to Z, and a number n. 
@@ -381,6 +389,8 @@ int leastInterval(vector<char>& tasks, int n) {
 }
 ```
 
+---
+
 ## 6. Reorganize String
 ```diff
 Given a string s, rearrange the characters of s so that any two adjacent characters are not the same.
@@ -427,6 +437,8 @@ string reorganizeString(string s) {
     return ans;
 }
 ```
+
+---
 
 ## 7. Single-Threaded CPU
 ```diff
@@ -514,6 +526,8 @@ vector<int> getOrder(vector<vector<int>>& tasks) {
     return ans;
 }
 ```
+
+---
 
 ## 8. Process Tasks Using Servers
 ```diff
@@ -617,6 +631,8 @@ public:
 };
 ```
 
+---
+
 ## 9. Merge k Sorted Lists
 ```diff
 You are given an array of k linked-lists lists, each linked-list is sorted in ascending order.
@@ -672,7 +688,9 @@ ListNode* mergeKLists(vector<ListNode*>& lists) {
 }
 ```
 
-## 9. Find K Pairs with Smallest Sums
+---
+
+## 10. Find K Pairs with Smallest Sums
 ```diff
 You are given two integer arrays nums1 and nums2 sorted in non-decreasing order and an integer k.
 Define a pair (u, v) which consists of one element from the first array and one element from the second array.
@@ -751,7 +769,9 @@ vector<vector<int>> kSmallestPairs(vector<int>& nums1, vector<int>& nums2, int k
 }
 ```
 
-## 10. IPO
+---
+
+## 11. IPO
 ```diff
 You have:
     capital[i] → minimum capital required to start project
