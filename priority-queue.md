@@ -232,21 +232,23 @@ Constraints:
 ```
 
 **Intuition**
+
+> [!IMPORTANT]
+> To find the median we need:
+> 1. Highest element from left half
+> 2. And smallest element from right half
+> 
+> we can maintain to heaps each giving us above
+
+> [!TIP]
+> strategy:
+> - maxHeap, minHeap
+> - maxHeap stores the extra one element if total number of elements is odd
+> - Do this while inserting:
+>    - push element to maxheap
+>    - if maxHeap.size() > minHeap.size() ==> push element to minHeap
+>    - if minHeap.size() > maxHeap.size() ==> push element to maxHeap
 ```
-To find the median we need:
-    1. Highest element from left half
-    2. And smallest element from right half
-
-we can maintain to heaps each giving us above
-
-strategy:
-    -- maxHeap, minHeap
-    -- maxHeap stores the extra one element if total number of elements is odd
-    -- Do this while inserting:
-        -- push element to maxheap
-        -- if maxHeap.size() > minHeap.size() ==> push element to minHeap
-        -- if minHeap.size() > maxHeap.size() ==> push element to maxHeap
-
 example:
     arr = [2, 3, 4, 5, 6]
     maxHeap = {}, minHeap = {}
