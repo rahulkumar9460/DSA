@@ -93,6 +93,8 @@ Example 2:
     Output: 4
 ```
 
+### INTUITION
+
 > [!NOTE]
 > If we sort the entire array the time complexity will be O(nlogn)
 > But if we keep track of only top K element the time will be O(nlogk)
@@ -178,14 +180,14 @@ Example 2:
     Output: [1,1,2,3]
 ```
 
-**Intuition**
-```
-Subtract x from arr[i]:
-arr = [1,2,3,4,5], k = 4, x = 3
-arr - x = [2, 1, 0, 1, 2]
+### Intuition
 
-now find kth smallest in (arr-x)
-```
+> [!NOTE]
+> Subtract x from arr[i]:
+> - arr = [1,2,3,4,5], k = 4, x = 3
+> - arr - x = [2, 1, 0, 1, 2]
+>
+>       now find kth smallest in (arr-x)
 
 ```cpp
 vector<int> findClosestElements(vector<int>& arr, int k, int x) {
@@ -231,14 +233,14 @@ Constraints:
     At most 5 * 104 calls will be made to addNum and findMedian.
 ```
 
-**Intuition**
+### Intuition
 
 > [!IMPORTANT]
 > To find the median we need:
 > 1. Highest element from left half
 > 2. And smallest element from right half
 > 
-> we can maintain to heaps each giving us above
+>       we can maintain to heaps each giving us above
 
 > [!TIP]
 > strategy:
@@ -336,7 +338,7 @@ least n intervals between two tasks with the same label.
     With a cooling interval of 1, you can repeat a task after just one other task.
 ```
 
-**Intuition**
+## Intuition
 
 So in one cycle of tasks there has to be n+1 distinct tasks,
 if not then for remaining time the cpu will be idle
@@ -356,7 +358,7 @@ if not then for remaining time the cpu will be idle
 > 2. run them
 > 3. if not enough → idle fills
 >
-> **Greedy + Max Heap + Process in cycles of size (n+1)**
+>       **Greedy + Max Heap + Process in cycles of size (n+1)**
 
 
 ```cpp
@@ -408,7 +410,10 @@ Return any possible rearrangement of s or return "" if not possible.
     Output: ""
 ```
 
-**Greedely pick highest two frequent element**
+### INTUITION
+> [!NOTE]
+> **Greedely pick highest two frequent element**
+
 ```cpp
 string reorganizeString(string s) {
     unordered_map<int, int> mp;
@@ -729,12 +734,13 @@ Example:
     Then:
         (1,0) pushes (1,1)
         (0,1) also pushes (1,1) ❌ duplicate
-
-- This leads to:
-    - repeated work
-    - incorrect ordering sometimes
-    - TLE in worst case
 ```
+
+> [!WARNING]
+> This leads to:
+> - repeated work
+> - incorrect ordering sometimes
+> - TLE in worst case
 
 > [!TIP]
 > - Instead of expanding both directions, use this:
