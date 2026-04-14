@@ -479,11 +479,11 @@ Explanation: The events go as follows:
 ### Intuition
 
 > [!IMPORTANT]
-> Keep track of time: currTime
-> Maintain a maxHeap to store procTime and index
-> Push all tasks if enqueueTime <= currTime
-> Pick top element from heap and process that task
-> Now currTime = currTime + pq.top().procTime
+> - Keep track of time: currTime
+> - Maintain a maxHeap to store procTime and index
+> - Push all tasks if enqueueTime <= currTime
+> - Pick top element from heap and process that task
+> - Now currTime = currTime + pq.top().procTime
 
 
 ```cpp
