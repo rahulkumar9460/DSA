@@ -1,3 +1,9 @@
+<p align="center">
+  <img src="https://img.shields.io/badge/DSA-Notes-blue?style=for-the-badge"/>
+  <img src="https://img.shields.io/badge/Difficulty-Medium-yellow?style=for-the-badge"/>
+  <img src="https://img.shields.io/badge/Pattern-DP-green?style=for-the-badge"/>
+</p>
+
 # 🚀 Problem Name / Topic Name
 
 > [!NOTE]
