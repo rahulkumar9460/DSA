@@ -71,9 +71,10 @@ repeatedly finding min/max → O(n²)
 
 ---
 
-```
+> [!TIP]
+> **Do I need the best element repeatedly while data keeps changing? --> if YES --> use priority_queue**
 
-**Do I need the best element repeatedly while data keeps changing? --> if YES --> use priority_queue**
+---
 
 # Problems:
 
