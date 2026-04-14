@@ -577,7 +577,7 @@ Explanation: Events in chronological order go as follows:
 > 4. If Yes push that server back into available server
 > 5. For the current task pick top server from available queue
 >
->   **This is a classic dual heap scheduling pattern:**
+>       **This is a classic dual heap scheduling pattern:**
 >
 > Recognize this when:
 > - Tasks arrive over time
