@@ -54,18 +54,18 @@ repeatedly finding min/max → O(n²)
 ---
 
 > [!IMPORTANT]
-> Pattern 1: Keep K Best
+> **Pattern 1: Keep K Best**
 > - Fixed size heap
 > - Remove worst when size > k
-
-> Pattern 2: Expand from Best (Best-first search)
+> 
+> **Pattern 2: Expand from Best (Best-first search)**
 > - Always process smallest/largest next
 > - Example: Dijkstra, K sorted lists merge
-
-> Pattern 3: Two Heaps (Median / balancing)
+> 
+> **Pattern 3: Two Heaps (Median / balancing)**
 > - Maintain left + right halves
-
-> Pattern 4: Lazy deletion
+> 
+> **Pattern 4: Lazy deletion**
 > - When removal is expensive
 > - Mark invalid and skip later
 
