@@ -152,10 +152,6 @@ int minCost(vector<vector<int>>& grid) {
     int m = grid.size(), n = grid[0].size();
     const int MAXX = 1024; // since values <= 1023
     
-    // dp[i][j][k] = is it possible to achieve XOR 'k' at (i, j)
-    // for(xor = 0 to 1024)
-    //      dp[i][j][xor] = (dp[i-1][j][xor^grid[i][j]] || dp[i][j-1][xor^grid[i][j]])
-
     vector<vector<vector<bool>>> dp(m, vector<vector<bool>>(n, vector<bool>(MAXX, false)));
     dp[0][0][grid[0][0]] = true;
 
