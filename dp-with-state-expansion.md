@@ -339,7 +339,13 @@ int minCost(int maxTime, vector<vector<int>>& edges, vector<int>& passingFees) {
 ```
 Minimum XOR Path in Grid
 Shortest Path with K Stops
-Paths with Maximum Score
-Number of Paths with Given Sum in Grid
 Minimum Cost to Reach Destination in Time
+
+Shortest Path in Grid with Obstacles Elimination
+Swim in Rising Water
+Cherry Pickup
+Unique Paths III
+Decode Ways II
+
+Number of Paths with Max Score
 ```
