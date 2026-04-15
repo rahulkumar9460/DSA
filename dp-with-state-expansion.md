@@ -40,3 +40,17 @@ dp[i][j][extra_state]
 > Think: **"My position alone does not determine future."**
 
 > Need: **"Position + current condition determines future."**
+
+**That condition becomes extra DP dimension.**
+
+## 3. How to Identify This Pattern
+
+
+> [!NOTE]
+> **Ask yourself:**
+>
+> Question 1:
+> If two ways reach same cell/node:
+> - Can I safely keep only one?
+>       If YES → normal DP.
+>       If NO → state expansion.
