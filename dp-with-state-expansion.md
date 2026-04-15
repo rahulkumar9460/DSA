@@ -100,3 +100,14 @@ You need state expansion when problem has:
 > - last move
 > - remaining skips
 
+## 5. Generic Transition Formula
+
+```cpp
+// usually
+dp[position][state] =
+    best from previous positions/states
+//
+// transition
+new_state = update(old_state)
+```
+
