@@ -54,3 +54,23 @@ dp[i][j][extra_state]
 >
 >       If YES → normal DP.
 >       If NO → state expansion.
+
+### Example:
+```
+Minimum XOR Grid:
+At cell (2,2):
+
+1. Path A reached with XOR = 5
+2. Path B reached with XOR = 9
+
+Can discard one?
+
+NO.
+
+Because future XOR depends on previous XOR.
+
+Thus:
+
+dp[i][j][xor]
+```
+
