@@ -49,7 +49,6 @@ dp[i][j][extra_state]
 > [!NOTE]
 > **Ask yourself:**
 >
-> Question 1:
 > If two ways reach same cell/node:
 > - Can I safely keep only one?
 >
