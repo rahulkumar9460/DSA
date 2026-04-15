@@ -74,3 +74,29 @@ Thus:
 dp[i][j][xor]
 ```
 
+## 4. Generic Recognition Template
+
+You need state expansion when problem has:
+
+"Reach destination with constraint"
+### Example
+> [!IMPORTANT]
+> - with K stops
+> - within T time
+> - with energy left
+> - with fuel remaining
+> - "Path value accumulates"
+
+> [!IMPORTANT]
+> - XOR
+> - sum
+> - score
+> - parity
+> - "Choices affect future"
+
+> [!IMPORTANT]
+> - cooldown
+> - previous color
+> - last move
+> - remaining skips
+
