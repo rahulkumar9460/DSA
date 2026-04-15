@@ -210,3 +210,50 @@ Output: 200
 Explanation:
 - The graph is shown above.
 - The optimal path with at most 1 stop from city 0 to 2 is marked in red and has cost 100 + 100 = 200.
+
+### Intuition
+> [!WARNING]
+> - If we use dp[i] --> min cost to reach node i
+> - we don't know dp[i] is achieved with how many stops
+
+> [!IMPORTANT]
+> - There can be atmost k+1 edges
+> - dp[i][x] = min cost to reach ith node with x stops
+> - update future --> transition
+>       If there is a edge between i and j
+>       dp[j][x+1] = min(dp[j][x+1], dp[i][x] + cost(i, j));
+
+```cpp
+void dfs(vector<vector<pair<int,int>>> &adj, vector<vector<int>> &dp,  int i, int stops, int k) {
+    if(dp[i][stops] == INT_MAX) return;
+    if(stops == k+1) return;
+
+    for(auto [j, cost] : adj[i]){
+        if(dp[i][stops] + cost < dp[j][stops+1]) {
+            dp[j][stops+1] = dp[i][stops] + cost;
+            dfs(adj, dp, j, stops+1, k);
+        }
+    }
+}
+int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int k) {
+    // dp[i][x] --> cost to arrive ith stop with cost x
+    // it there is path i ---> j
+    // dp[j][x+1] = min(dp[j][x+1], dp[i][x] + cost(i, j))
+
+    vector<vector<pair<int,int>>> adj(n, vector<pair<int,int>>());
+    for(auto &f: flights)
+        adj[f[0]].push_back({f[1], f[2]});
+    
+    vector<vector<int>> dp(n, vector<int>(k+2, INT_MAX));
+    dp[src][0] = 0;
+
+    dfs(adj, dp, src, 0, k);
+    
+    int ans = INT_MAX;
+    for(int stops=1; stops<=k+1; stops++)
+        if(dp[dst][stops] != INT_MAX)
+            ans = min(ans, dp[dst][stops]);
+    
+    return ans==INT_MAX ? -1 : ans;
+}
+```
