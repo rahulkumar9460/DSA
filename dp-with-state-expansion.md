@@ -257,3 +257,89 @@ int findCheapestPrice(int n, vector<vector<int>>& flights, int src, int dst, int
     return ans==INT_MAX ? -1 : ans;
 }
 ```
+---
+
+## 3. Minimum Cost to Reach Destination in Time
+[Leetcode link](https://leetcode.com/problems/minimum-cost-to-reach-destination-in-time/description/)
+
+```
+There is a country of n cities numbered from 0 to n - 1 where all the cities are connected by bi-directional roads. 
+The roads are represented as a 2D integer array edges where edges[i] = [xi, yi, timei] denotes a 
+road between cities xi and yi that takes timei minutes to travel. There may be multiple roads of differing 
+travel times connecting the same two cities, but no road connects a city to itself.
+
+Each time you pass through a city, you must pay a passing fee. This is represented as a 0-indexed integer 
+array passingFees of length n where passingFees[j] is the amount of dollars you must pay when you pass through city j.
+
+In the beginning, you are at city 0 and want to reach city n - 1 in maxTime minutes or less. 
+The cost of your journey is the summation of passing fees for each city that you passed 
+through at some moment of your journey (including the source and destination cities).
+``` 
+
+> Given maxTime, edges, and passingFees, return the minimum cost to complete your journey, 
+> or -1 if you cannot complete it within maxTime minutes.
+
+### Intuition
+
+> [!IMPORTANT]
+> dp[i][t] = min cost to reach city i in 't' minutes
+> if there is a edge between i and j --> update future --> transition
+>
+>       dp[j][t + time(i, j)] = dp[i][t] + passingFees[j]
+> If we use DFS for state expansion:
+> - Might give TLE since it's ans undirected graph
+> - Use Dijkstra for state expansion
+
+```cpp
+typedef pair<int, pair<int,int>> pii;
+
+int minCost(int maxTime, vector<vector<int>>& edges, vector<int>& passingFees) {
+    // dp[i][t] = min cost to reach city i in 't' minutes
+    // if there is a edge between (i, j)
+    // dp[j][t + time(i, j)] = dp[i][t] + passingFees[j]
+
+    int n = passingFees.size();
+
+    vector<vector<pair<int, int>>> adj(n, vector<pair<int,int>>());
+    for(auto e : edges) {
+        adj[e[0]].push_back({e[1], e[2]});
+        adj[e[1]].push_back({e[0], e[2]});
+    }
+
+    vector<vector<int>> dp(n, vector<int>(maxTime+1,  INT_MAX));
+    dp[0][0] = passingFees[0];
+
+    priority_queue<pii, vector<pii>, greater<pii>> pq;
+    pq.push({passingFees[0], {0, 0}});
+
+    while(!pq.empty()) {
+        auto [currCost, state] = pq.top();
+        pq.pop();
+        int i = state.first;
+        int currTime = state.second;
+
+        if(i == n-1) return currCost;
+
+        for(auto [j, t]: adj[i]) {
+            int nextTime = currTime + t;
+            if(nextTime > maxTime) continue;
+
+            int nextCost = currCost + passingFees[j];
+            if(dp[j][nextTime] > nextCost) {
+                dp[j][nextTime] = nextCost;
+                pq.push({nextCost, {j, nextTime}});
+            }
+        }
+    }
+    return -1;
+
+}
+```
+
+```
+Minimum XOR Path in Grid
+Shortest Path with K Stops
+Paths with Maximum Score
+Number of Paths with Given Sum in Grid
+Minimum Cost to Reach Destination in Time
+```
