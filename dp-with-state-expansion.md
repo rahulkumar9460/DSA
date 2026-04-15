@@ -202,11 +202,7 @@ graph LR
     1 -->|100| 2
     0 -->|500| 2
 ```
-```mermaid
-graph TD
-    A[Start Node] --> B((Circle Node))
-    B --> C{Decision}
-```
+
 Input: n = 3, flights = [[0,1,100],[1,2,100],[0,2,500]]
 src = 0, dst = 2, k = 1
 Output: 200
