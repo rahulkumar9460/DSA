@@ -458,6 +458,7 @@ grid[n - 1][n - 1] != -1
 ```
 
 ### Intuition:
+
 > [!IMPORTANT]
 > dp[i][j] maximum cherries collected to reach (i, j)
 > assume two person starts from (0, 0) and they move simultensly
