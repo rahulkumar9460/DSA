@@ -479,10 +479,10 @@ grid[n - 1][n - 1] != -1
 >
 
 > [!Note]
-> since r1+c1 == r2+c2
-> we can use three dimensional dp as well
-> use dp[r1][c1][r2]
-> c2 = r1+c1-r2;
+> - since r1+c1 == r2+c2
+> - we can use three dimensional dp as well
+> - use dp[r1][c1][r2]
+> - c2 = r1+c1-r2;
 
 ```cpp
 class Solution {
