@@ -367,7 +367,7 @@ Such path is (0,0) -> (0,1) -> (0,2) -> (1,2) -> (2,2) -> (3,2) -> (4,2).
 > 
 > assume we move right i.e (i, j+1)
 >
->       // If there is obstacle, now we encoutered 't+1' obstacles
+>       // If there is obstacle, now we encountered 't+1' obstacles
 >       if(grid[i][j+1] == 1 && t+1 <= k) dp[i][j+1][t+1] = min(dp[i][j+1][t+1], dp[i][j][t]+1)
 >
 >       // If there is no obstacle
@@ -386,7 +386,7 @@ int shortestPath(vector<vector<int>>& grid, int k) {
     vector<vector<int>> dir = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
 
     // BFS
-    queue<pair<int, pair<int,int>>> q; // x, i, j
+    queue<pair<int, pair<int,int>>> q; // t, i, j
     if(grid[0][0] == 0) {
         dp[0][0][0] = 0;
         q.push({0, {0, 0}});
