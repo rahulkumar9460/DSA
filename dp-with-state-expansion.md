@@ -471,6 +471,7 @@ grid[n - 1][n - 1] != -1
 > - person 2 is at (r2, c2)  
 >  
 > **Transitions (4 options):**
+>
 >        Down, Down  
 >        Right, Right  
 >        Down, Right  
