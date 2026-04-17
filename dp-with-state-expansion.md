@@ -283,6 +283,7 @@ through at some moment of your journey (including the source and destination cit
 
 > [!IMPORTANT]
 > dp[i][t] = min cost to reach city i in 't' minutes
+>
 > if there is a edge between i and j --> update future --> transition
 >
 >       dp[j][t + time(i, j)] = dp[i][t] + passingFees[j]
@@ -460,6 +461,7 @@ grid[n - 1][n - 1] != -1
 ### Intuition:
 
 > [!IMPORTANT]
+>
 > dp[i][j] maximum cherries collected to reach (i, j)
 > assume two person starts from (0, 0) and they move simultensly
 > so state is represented by (r1, c1) and (r2, c2)
