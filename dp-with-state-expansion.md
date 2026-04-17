@@ -480,7 +480,7 @@ grid[n - 1][n - 1] != -1
 > use dp[r1][c1][r2]
 > c2 = r1+c1-r2;
 
-```
+```cpp
 class Solution {
 public:
     int n;
