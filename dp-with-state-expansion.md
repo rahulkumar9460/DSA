@@ -458,7 +458,7 @@ grid[0][0] != -1
 grid[n - 1][n - 1] != -1
 ```
 
-### Intuition:
+### Intuition
 
 > [!IMPORTANT]
 >
