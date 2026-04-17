@@ -430,13 +430,111 @@ int shortestPath(vector<vector<int>>& grid, int k) {
 }
 ```
 
+## 5. Cherry Pickup
+[Leetcode link](https://leetcode.com/problems/cherry-pickup/description/)
+
+You are given an n x n grid representing a field of cherries, each cell is one of three possible integers.
+
+- 0 means the cell is empty, so you can pass through,
+- 1 means the cell contains a cherry that you can pick up and pass through, or
+- -1 means the cell contains a thorn that blocks your way.
+
+> [!NOTE]
+> Return the maximum number of cherries collection using both robots by following the rules below:
+> 
+> - From a cell (i, j), robots can move to cell (i + 1, j - 1), (i + 1, j), or (i + 1, j + 1).
+> - When any robot passes through a cell, It picks up all cherries, and the cell becomes an empty cell.
+> - When both robots stay in the same cell, only one takes the cherries.
+> - Both robots cannot move outside of the grid at any moment.
+> - Both robots should reach the bottom row in grid.
+
+```
+n == grid.length
+n == grid[i].length
+1 <= n <= 50
+grid[i][j] is -1, 0, or 1.
+grid[0][0] != -1
+grid[n - 1][n - 1] != -1
+```
+
+### Intuition:
+> [!IMPORTANT]
+> dp[i][j] maximum cherries collected to reach (i, j)
+> assume two person starts from (0, 0) and they move simultensly
+> so state is represented by (r1, c1) and (r2, c2)
+> since both persons move simultensly so r1+c1 == r2+c2
+> dp[r1][c1][r2][c2] = maximum cherries collected by person one reaching at(r1, c1) and person two 
+> reaching at (r2, c2)
+> -
+> now do transition
+>
+>       four options
+>       one go DOWN, two go DOWN
+>       RIGHT, RIGHT
+>       DOWN, RIGHT
+>       RIGHT, DOWN
+
+> [!Note]
+> since r1+c1 == r2+c2
+> we can use three dimensional dp as well
+> use dp[r1][c1][r2]
+> c2 = r1+c1-r2;
+
+```
+class Solution {
+public:
+    int n;
+    vector<vector<int>> grid;
+    int dp[51][51][51][51];
+
+    int solve(int r1, int c1, int r2, int c2) {
+        // invalid states
+        if(r1>=n || c1>=n || r2>=n || c2>=n ||
+           grid[r1][c1]==-1 || grid[r2][c2]==-1)
+            return INT_MIN;
+
+        // reached end
+        if(r1==n-1 && c1==n-1 && r2==n-1 && c2==n-1)
+            return grid[n-1][n-1];
+
+        if(dp[r1][c1][r2][c2] != -1) return dp[r1][c1][r2][c2];
+
+        int cherries = grid[r1][c1];
+        if(r1 != r2 || c1 != c2) // if both person are not at same location
+            cherries += grid[r2][c2];
+
+        int best = max({
+            solve(r1+1, c1, r2+1, c2), // down, down
+            solve(r1+1, c1, r2, c2+1), // down, right
+            solve(r1, c1+1, r2+1, c2), // right, down
+            solve(r1, c1+1, r2, c2+1)  // right, right
+        });
+        
+
+        return dp[r1][c1][r2][c2] = cherries + best;
+    }
+
+    int cherryPickup(vector<vector<int>>& g) {
+        grid = g;
+        n = grid.size();
+
+        memset(dp, -1, sizeof(dp));
+
+        int res = solve(0,0,0,0);
+
+        return max(0, res);
+    }
+};
+```
+
+
 
 ```
 Minimum XOR Path in Grid
 Shortest Path with K Stops
 Minimum Cost to Reach Destination in Time
-
 Shortest Path in Grid with Obstacles Elimination
+
 Swim in Rising Water
 Cherry Pickup
 Unique Paths III
