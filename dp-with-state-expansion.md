@@ -461,21 +461,20 @@ grid[n - 1][n - 1] != -1
 ### Intuition
 
 > [!IMPORTANT]
->
-> dp[i][j] maximum cherries collected to reach (i, j)
-> assume two person starts from (0, 0) and they move simultensly
-> so state is represented by (r1, c1) and (r2, c2)
-> since both persons move simultensly so r1+c1 == r2+c2
-> dp[r1][c1][r2][c2] = maximum cherries collected by person one reaching at(r1, c1) and person two 
-> reaching at (r2, c2)
-> -
-> now do transition
->
->       four options
->       one go DOWN, two go DOWN
->       RIGHT, RIGHT
->       DOWN, RIGHT
->       RIGHT, DOWN
+> dp[i][j] = maximum cherries collected to reach (i, j)  
+> Assume two persons start from (0, 0) and move simultaneously.  
+> So state is represented by (r1, c1) and (r2, c2).  
+> Since both move simultaneously, r1 + c1 == r2 + c2.  
+>  
+> dp[r1][c1][r2][c2] = maximum cherries collected when:  
+> - person 1 is at (r1, c1)  
+> - person 2 is at (r2, c2)  
+>  
+> **Transitions (4 options):**
+> - Down, Down  
+> - Right, Right  
+> - Down, Right  
+> - Right, Down  
 
 > [!Note]
 > since r1+c1 == r2+c2
