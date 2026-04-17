@@ -336,6 +336,97 @@ int minCost(int maxTime, vector<vector<int>>& edges, vector<int>& passingFees) {
 }
 ```
 
+---
+
+## 4. Shortest Path in a Grid with Obstacles Elimination
+[Leetcode link=](https://leetcode.com/problems/shortest-path-in-a-grid-with-obstacles-elimination/description/)
+
+You are given an m x n integer matrix grid where each cell is either 0 (empty) or 1 (obstacle). 
+You can move up, down, left, or right from and to an empty cell in one step.
+
+Return the minimum number of steps to walk from the upper left corner (0, 0) to the 
+lower right corner (m - 1, n - 1) given that you can eliminate at most k obstacles. 
+If it is not possible to find such walk return -1.
+
+```
+Input: grid = [[0,0,0],[1,1,0],[0,0,0],[0,1,1],[0,0,0]], k = 1
+Output: 6
+
+Explanation: 
+The shortest path without eliminating any obstacle is 10.
+The shortest path with one obstacle elimination at position (3,2) is 6. 
+Such path is (0,0) -> (0,1) -> (0,2) -> (1,2) -> (2,2) -> (3,2) -> (4,2).
+```
+
+### Intuition
+> [!IMPORTANT]
+> dp[i][j][t] --> steps taken to reach (i, j) with t obstacles elimination
+> assume we move left i.e (i, j+1)
+>
+>       // If there is wall
+>       if(grid[i][j+1] == 1 && t+1 <= k) dp[i][j+1][t+1] = min(dp[i][j+1][t+1], dp[i][j][t]+1)
+>
+>       // If there is no wall
+>       if(grid[i][j+1] == 0) dp[i][j+1][t] = min(dp[i][j+1][t], dp[i][j][t]+1)
+
+```cpp
+int shortestPath(vector<vector<int>>& grid, int k) {
+    // dp[i][j][t] --> steps taken to reach (i, j) with t obstacles elimination
+    // assume we move left i.e (i, j+1)
+    // if(grid[i][j+1] == 1 && t+1 <= k) dp[i][j+1][t+1] = min(dp[i][j+1][t+1], dp[i][j][t]+1)
+    // if(grid[i][j+1] == 0) dp[i][j+1][t] = min(dp[i][j+1][t], dp[i][j][t]+1)
+
+    int n = grid.size(), m = grid[0].size();
+    vector<vector<vector<int>>> dp(n, vector<vector<int>>(m, vector<int>(k+1, INT_MAX)));
+
+    vector<vector<int>> dir = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
+
+    // BFS
+    queue<pair<int, pair<int,int>>> q; // x, i, j
+    if(grid[0][0] == 0) {
+        dp[0][0][0] = 0;
+        q.push({0, {0, 0}});
+    } else {
+        dp[0][0][1] = 0;
+        q.push({1, {0, 0}});
+    }
+
+    // BFS
+    while(!q.empty()) {
+        auto [t, pos] = q.front();
+        q.pop();
+
+        int i = pos.first, j = pos.second;
+        for(auto d : dir) {
+            int x = i + d[0];
+            int y = j + d[1];
+
+            if(x < 0 || y < 0 || x >= n || y >= m) continue;
+
+            if(grid[x][y] == 1 && t+1 <= k) {
+                if(dp[i][j][t] + 1 < dp[x][y][t+1]) {
+                    dp[x][y][t+1] = dp[i][j][t] + 1;
+                    q.push({t+1, {x, y}});
+                }
+            } else if(grid[x][y] == 0) {
+                if(dp[i][j][t] + 1 < dp[x][y][t]) {
+                    dp[x][y][t] = dp[i][j][t] + 1;
+                    q.push({t, {x, y}});
+                }
+            }
+        }
+    }
+
+    int ans = INT_MAX;
+    for(int x=0; x<=k; x++) {
+        ans = min(ans, dp[n-1][m-1][x]);
+    }
+
+    return ans==INT_MAX ? -1 : ans;
+}
+```
+
+
 ```
 Minimum XOR Path in Grid
 Shortest Path with K Stops
