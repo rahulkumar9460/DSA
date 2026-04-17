@@ -361,6 +361,8 @@ Such path is (0,0) -> (0,1) -> (0,2) -> (1,2) -> (2,2) -> (3,2) -> (4,2).
 ### Intuition
 > [!IMPORTANT]
 > dp[i][j][t] --> steps taken to reach (i, j) with t obstacles elimination
+> 
+> Now go in each direction and fill the values in dp.
 > assume we move left i.e (i, j+1)
 >
 >       // If there is wall
