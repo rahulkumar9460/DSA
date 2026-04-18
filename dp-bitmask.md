@@ -82,37 +82,37 @@ for mask: // all possible subsets
 ## ⚙️ Important Bit Operations
 
 > [!IMPORTANT]
-> Check if i is in mask ----> mask & (1 << i)
+> - Check if i is in mask ----> mask & (1 << i)
 >
-> Add i to mask ----> mask | (1 << i)
+> - Add i to mask ----> mask | (1 << i)
 >
-> Remove i from mask ----> mask ^ (1 << i)
+> - Remove i from mask ----> mask ^ (1 << i)
 >
-> Check if mask is full ---- > mask == (1 << n) - 1
+> - Check if mask is full ---- > mask == (1 << n) - 1
 >
-> Iterate all masks ----> for (int mask = 0; mask < (1<<n); mask++)
+> - Iterate all masks ----> for (int mask = 0; mask < (1<<n); mask++)
 >
-> Iterate elements in mask
-> - for (int i = 0; i < n; i++)
->   - if (mask & (1<<i))
+> - Iterate elements in mask
+>   - for (int i = 0; i < n; i++)
+>       - if (mask & (1<<i))
 > 
-> Iterate elements NOT in mask
-> - for (int i = 0; i < n; i++)
->   - if (!(mask & (1<<i)))
+> - Iterate elements NOT in mask
+>   - for (int i = 0; i < n; i++)
+>       - if (!(mask & (1<<i)))
 >
-> Remove lowest set bit ----> mask & (mask - 1)
+> - Remove lowest set bit ----> mask & (mask - 1)
 > 
-> Get lowest set bit ----> mask & (-mask)
+> - Get lowest set bit ----> mask & (-mask)
 
 
 ## 🎯 Full Mask vs Final Mask
 > [!NOTE]
-> Total masks ----> totalMasks = 1 << n → number of states
-> Final mask (all visited) ----> finalMask = (1 << n) - 1
+> - Total masks ----> totalMasks = 1 << n → number of states
+> - Final mask (all visited) ----> finalMask = (1 << n) - 1
 >
 > - Example (`n = 4`):
-> - 1 << 4     = 10000
-> - (1<<4) - 1 = 01111 → 1111
+>   - 1 << 4     = 10000
+>   - (1<<4) - 1 = 01111 → 1111
 
 ---
 
