@@ -555,10 +555,13 @@ You have two robots that can collect cherries for you:
 
 > [!IMPORTANT]
 > both robots move downwards -- always r1 == r2
+>
 > One robot can move 3 ways and other can also move 3 ways -- multiple states
+>
 > We have to keep track of all the states
-> dp[r1][c1][r2][c2] == max cherries collected by robot at reaching at (r1, c1) and by robot 2 reaching at(r2, c2)
-> since r1 == r2 -- use dp[r][c1][c2]
+>
+>       dp[r1][c1][r2][c2] == max cherries collected by robot at reaching at (r1, c1) and by robot 2 reaching at(r2, c2)
+>       since r1 == r2 -- use dp[r][c1][c2]
 
 ```cpp
 class Solution {
