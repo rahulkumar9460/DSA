@@ -531,6 +531,85 @@ public:
 };
 ```
 
+---
+
+## 6. Cherry Pickup II
+[Leetcode link](https://leetcode.com/problems/cherry-pickup-ii/description/)
+
+You are given a rows x cols matrix grid representing a field of cherries where 
+grid[i][j] represents the number of cherries that you can collect from the (i, j) cell.
+
+You have two robots that can collect cherries for you:
+- Robot #1 is located at the top-left corner (0, 0), and
+- Robot #2 is located at the top-right corner (0, cols - 1).
+
+> [!Note]
+> Return the maximum number of cherries collection using both robots by following the rules below:
+> - From a cell (i, j), robots can move to cell (i + 1, j - 1), (i + 1, j), or (i + 1, j + 1).
+> - When any robot passes through a cell, It picks up all cherries, and the cell becomes an empty cell.
+> - When both robots stay in the same cell, only one takes the cherries.
+> - Both robots cannot move outside of the grid at any moment.
+> - Both robots should reach the bottom row in grid.
+
+### Intuition
+
+> [!IMPORTANT]
+> both robots move downwards -- always r1 == r2
+> One robot can move 3 ways and other can also move 3 ways -- multiple states
+> We have to keep track of all the states
+> dp[r1][c1][r2][c2] == max cherries collected by robot at reaching at (r1, c1) and by robot 2 reaching at(r2, c2)
+> since r1 == r2 -- use dp[r][c1][c2]
+
+```cpp
+class Solution {
+public:
+    int n, m;
+    vector<vector<int>> grid;
+    int dp[71][71][71];
+
+    int solve(int r, int c1, int c2) {
+        if(c1 < 0 || c2 < 0 || c1 >= m || c2 >= m) return -1e9;
+
+        if(r == n - 1) {
+            if(c1 == c2) return grid[r][c1];
+            return grid[r][c1] + grid[r][c2];
+        }
+
+        if(dp[r][c1][c2] != -1) return dp[r][c1][c2];
+
+        int cherries = grid[r][c1];
+        if(c1 != c2) cherries += grid[r][c2];
+
+        int res = max({ 
+            solve(r+1, c1-1, c2-1),
+            solve(r+1, c1-1, c2),
+            solve(r+1, c1-1, c2+1),
+
+            solve(r+1, c1, c2-1),
+            solve(r+1, c1, c2),
+            solve(r+1, c1, c2+1),
+
+            solve(r+1, c1+1, c2-1),
+            solve(r+1, c1+1, c2),
+            solve(r+1, c1+1, c2+1),
+        });
+
+        return dp[r][c1][c2] = cherries + res;
+    }
+
+    int cherryPickup(vector<vector<int>>& g) {
+        memset(dp, -1, sizeof(dp));
+        grid = g;
+        n = g.size();
+        m = g[0].size();
+
+        return max(0, solve(0, 0, m - 1));
+    }
+};
+```
+
+
+
 
 
 ```
