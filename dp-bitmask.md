@@ -195,6 +195,7 @@ Constraints:
 ### Intuition
 > [!IMPORTANT]
 > Brute-force: need to generate all permutaions --> time - 0(n!)
+>
 > In these subsets many paths will be common and results for these can be stored
 > 
 > - States depends in which cities have been visited, and where is salesman now
