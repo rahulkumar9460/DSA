@@ -173,3 +173,78 @@ Space: O(2^n * n)
 ```
 ---
 
+## 1. Travelling Salesman Problem
+[GFG link](https://www.geeksforgeeks.org/problems/travelling-salesman-problem2732/1)
+
+Given a 2d matrix cost[][] of size n where cost[i][j] denotes the cost of moving from city i to city j. 
+Your task is to complete a tour from city 0 (0-based index) to all other cities such 
+that you visit each city exactly once and then at the end come back to city 0 at minimum cost.
+
+```
+Input: cost[][] = [[0, 1000, 5000],
+                [5000, 0, 1000],
+                [1000, 5000, 0]]
+Output: 3000
+Explanation: We can visit 0->1->2->0 and cost = 1000 + 1000 + 1000 = 3000
+```
+
+Constraints:
+- 1 ≤ cost.size() ≤ 15
+- 0 ≤ cost[i][j] ≤ 104
+
+### Intuition
+> [!IMPORTANT]
+> Brute-force: need to generate all permutaions --> time - 0(n!)
+> In these subsets many paths will be common and results for these can be stored
+> 
+> - States depends in which cities have been visited, and where is salesman now
+>   - Example: two paths (0->1->3), (3->1->0) 
+>   - mask for both path is: 1101, but both are different
+>       
+>           this is why we need the curr position also to determine the correct state
+>
+>           dp[mask][i] --> cost of visiting cities in mask while curr location is at 'i'
+>           mask ---> visited cities
+>           i ---> current city
+
+```cpp
+int tsp(vector<vector<int>>& cost) {
+    int n = cost.size();
+    if (n == 1) return 0;
+    
+    int totalMasks = 1 << n;
+    const int INF = 1e9;
+    
+    vector<vector<int>> dp(totalMasks, vector<int>(n, INF));
+    dp[1 << 0][0] = 0; // visited city 0, currently at city 0 --> cost = 0
+    
+    for (int mask = 0; mask < totalMasks; mask++) { // all subsets
+        for (int i = 0; i < n; i++) { // curr positions
+            
+            // curr position i not in mask
+            if (!(mask & (1 << i))) continue;
+            
+            // visit j from i
+            for (int j = 0; j < n; j++) {
+                // j is already visited
+                if (mask & (1 << j)) continue;
+                
+                int newMask = mask | (1 << j);
+                dp[newMask][j] = min(dp[newMask][j], dp[mask][i] + cost[i][j]);
+            }
+        }
+    }
+    
+    int finalMask = (1 << n) - 1;
+    int ans = INT_MAX;
+    
+    for (int i = 1; i < n; i++) {
+        ans = min(ans, dp[finalMask][i] + cost[i][0]);
+    }
+    
+    return ans;
+}
+```
+
+---
+
