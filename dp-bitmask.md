@@ -208,7 +208,7 @@ Constraints:
 >           mask ---> visited cities
 >           i ---> current city
 
-! [!NOTE]
+> [!NOTE]
 > mask is a subset not a permutation
 > - mask1 = 100 --> city 2 is visited
 > - mask2 = 0010010 --> cities 1 and 4 are visited
