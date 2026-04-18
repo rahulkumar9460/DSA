@@ -196,7 +196,7 @@ Constraints:
 > [!IMPORTANT]
 > Brute-force: need to generate all permutaions --> time - 0(n!)
 >
-> In these subsets many paths will be common and results for these can be stored
+> In these permutaions many paths will be common and results for these can be stored
 > 
 > - States depends in which cities have been visited, and where is salesman now
 >   - Example: two paths (0->1->3), (3->1->0) 
@@ -207,6 +207,11 @@ Constraints:
 >           dp[mask][i] --> cost of visiting cities in mask while curr location is at 'i'
 >           mask ---> visited cities
 >           i ---> current city
+
+! [!NOTE]
+> mask is a subset not a permutation
+> - mask1 = 100 --> city 2 is visited
+> - mask2 = 0010010 --> cities 1 and 4 are visited
 
 ```cpp
 int tsp(vector<vector<int>>& cost) {
@@ -219,7 +224,7 @@ int tsp(vector<vector<int>>& cost) {
     vector<vector<int>> dp(totalMasks, vector<int>(n, INF));
     dp[1 << 0][0] = 0; // visited city 0, currently at city 0 --> cost = 0
     
-    for (int mask = 0; mask < totalMasks; mask++) { // all subsets
+    for (int mask = 0; mask < totalMasks; mask++) { // all subsets -- 0(2^n)
         for (int i = 0; i < n; i++) { // curr positions
             
             // curr position i not in mask
@@ -245,6 +250,11 @@ int tsp(vector<vector<int>>& cost) {
     
     return ans;
 }
+```
+
+```
+Time - O(2^n * n^2)
+Space - O(2^n * n)
 ```
 
 ---
