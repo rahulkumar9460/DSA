@@ -289,8 +289,11 @@ n == nums2.length
 ### Intuition
 > [!IMPORTANT]
 > mask --> represents elements form nums2 which have been used already
+>
 > setbits in mask shows elements are used from nums2
+>
 > number of setbits in mask shows the index till elements are assigned form nums1
+>
 > dp[mask] = min XORSum achieved by elements present in mask from nums2
 
 ```cpp
