@@ -270,6 +270,7 @@ For example, the XOR sum of [1,2,3] and [3,2,1] is equal to
 (1 XOR 3) + (2 XOR 2) + (3 XOR 1) = 2 + 0 + 2 = 4.
 
 > Rearrange the elements of nums2 such that the resulting XOR sum is minimized.
+>
 > Return the XOR sum after the rearrangement.
 
 
@@ -277,6 +278,7 @@ Input: nums1 = [1,0,3], nums2 = [5,3,4]
 Output: 8
 
 > Explanation: Rearrange nums2 so that it becomes [5,4,3]. 
+>
 > The XOR sum is (1 XOR 5) + (0 XOR 4) + (3 XOR 3) = 4 + 4 + 0 = 8.
 
 ```
