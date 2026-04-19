@@ -256,6 +256,83 @@ int tsp(vector<vector<int>>& cost) {
 Time - O(2^n * n^2)
 Space - O(2^n * n)
 ```
-
 ---
 
+## 2. Minimum XOR Sum of Two Arrays
+[text](https://leetcode.com/problems/minimum-xor-sum-of-two-arrays/description/)
+
+You are given two integer arrays nums1 and nums2 of length n.
+
+The XOR sum of the two integer arrays is 
+(nums1[0] XOR nums2[0]) + (nums1[1] XOR nums2[1]) + ... + (nums1[n - 1] XOR nums2[n - 1]) (0-indexed).
+
+For example, the XOR sum of [1,2,3] and [3,2,1] is equal to 
+(1 XOR 3) + (2 XOR 2) + (3 XOR 1) = 2 + 0 + 2 = 4.
+
+> Rearrange the elements of nums2 such that the resulting XOR sum is minimized.
+> Return the XOR sum after the rearrangement.
+
+
+Input: nums1 = [1,0,3], nums2 = [5,3,4]
+Output: 8
+Explanation: Rearrange nums2 so that it becomes [5,4,3]. 
+- The XOR sum is (1 XOR 5) + (0 XOR 4) + (3 XOR 3) = 4 + 4 + 0 = 8.
+
+```
+Constraints:
+
+n == nums1.length
+n == nums2.length
+1 <= n <= 14
+```
+
+### Intuition
+> [!IMPORTANT]
+> mask --> represents elements form nums2 which have been used already
+> setbits in mask shows elements are used from nums2
+> number of setbits in mask shows the index till elements are assigned form nums1
+> dp[mask] = min XORSum achieved by elements present in mask from nums2
+
+```cpp
+int setbitsCount(int mask) {
+    int count = 0;
+    while (mask > 0) {
+        count += (mask & 1);
+        mask >>= 1;
+    }
+    return count;
+}
+
+int minimumXORSum(vector<int>& nums1, vector<int>& nums2) {
+    // mask --> represents elements form nums2 which have been used already
+    // setbits in mask shows elements are used from nums2
+    // unset bits tell the indicies not used from nums2
+    // number of setbits in mask shows the index till elements are assigned form nums1
+
+    int n = nums1.size();
+    int totalMasks = 1 << n;
+    const int INF = 1e9;
+
+    vector<int> dp(totalMasks, INT_MAX);
+    dp[0] = 0; // 0 elements used from nums2
+
+    for(int mask=0; mask<totalMasks; mask++) {
+        if(dp[mask] == INT_MAX) continue;
+        int setBits = setbitsCount(mask);
+        
+        int i = setBits; // next index from nums1
+        if(i >= n) continue;
+
+        for(int j=0; j<n; j++) {
+            if(!(mask & (1<<j))) { // index already used from nums2
+                int newMask = mask | (1<<j);
+
+                dp[newMask] = min(dp[newMask], dp[mask] + (nums1[i]^nums2[j]));
+            }
+        }
+    }
+
+    int finalMask = (1<<n)-1;
+    return dp[finalMask];
+}
+```
