@@ -394,7 +394,7 @@ int shortestPathLength(vector<vector<int>>& graph) {
     for(int i=0; i<n; i++) {
         int mask = 1<<i;
         dp[mask][i] = 0;
-        q.push({mask, i});
+        q.push({mask, i}); // start from every node
     }
 
     int finalMask = (1<<n) - 1;
@@ -417,5 +417,130 @@ int shortestPathLength(vector<vector<int>>& graph) {
     }
 
     return -1;
+}
+```
+
+---
+
+## 4. Partition to K Equal Sum Subsets
+[Leetcode link](https://leetcode.com/problems/partition-to-k-equal-sum-subsets/description/)
+Given an integer array nums and an integer k, return true if it is possible 
+to divide this array into k non-empty subsets whose sums are all equal.
+
+ 
+
+Example 1:
+- Input: nums = [4,3,2,3,5,2,1], k = 4
+- Output: true
+- Explanation: It is possible to divide it into 4 subsets (5), (1, 4), (2,3), (2,3) with equal sums.
+
+Example 2:
+- Input: nums = [1,2,3,4], k = 3
+- Output: false
+
+```
+Constraints:
+    1 <= k <= nums.length <= 16
+    1 <= nums[i] <= 10^4
+    The frequency of each element is in the range [1, 4].
+```
+
+### Intuition
+
+> [!IMPORTANT]
+> totalSum % k == 0, otherwise partition is not possible
+>
+>       This problem can be solved using backtracking
+>
+> but we need to keep track of elements that are visited
+> since n <= 16, instead of SET we can use bitmask
+>
+> mask --> tells us which elements are visited
+
+```cpp
+bool solve(int mask, int currSum, int target, vector<int>&nums, int k) {
+    if(k == 0) return true;
+    if(currSum == target) {
+        return solve(mask, 0, target, nums, k-1);
+    }
+
+    int n = nums.size();
+    for(int i=0; i<n; i++) {
+        if(!(mask & (1<<i))) {
+            int nextSum = currSum + nums[i];
+            if(nextSum <= target) {
+                int nextMask = mask | (1 << i);
+
+                int ans = solve(nextMask, nextSum, target, nums, k);
+                if(ans) return true;
+            }
+        }
+    }
+
+    return false;
+
+}
+bool canPartitionKSubsets(vector<int>& nums, int k) {
+    // targetSum = totalSum(nums)/k
+    // we can solve it by backtracking
+    // keep picking elements if currentSum <= targetSum
+    // if k == 0 return true
+    // we need to keep track of elements that have been visited using mask
+
+    int sum = accumulate(nums.begin(), nums.end(), 0);
+    if(sum % k != 0) return false;
+
+    int target = sum/k;
+    sort(nums.rbegin(), nums.rend());
+
+    return solve(0, 0, target, nums, k);
+}
+```
+
+> [!NOTE]
+> We can add memoization to above code
+
+```cpp
+bool solve(int mask, int currSum, int target, vector<int>&nums, int k, vector<int> &memo) {
+    if(k == 0) return true;
+    if(currSum == target) {
+        return solve(mask, 0, target, nums, k-1, memo);
+    }
+
+    if(memo[mask] != -1) return memo[mask];
+
+    int n = nums.size();
+    for(int i=0; i<n; i++) {
+        if(!(mask & (1<<i))) {
+            int nextSum = currSum + nums[i];
+            if(nextSum <= target) {
+                int nextMask = mask | (1 << i);
+
+                int ans = solve(nextMask, nextSum, target, nums, k, memo);
+                if(ans) return memo[mask] = true;
+            }
+        }
+    }
+
+    return memo[mask] = false;
+
+}
+bool canPartitionKSubsets(vector<int>& nums, int k) {
+    // targetSum = totalSum(nums)/k
+    // we can solve it by backtracking
+    // keep picking elements if currentSum <= targetSum
+    // if k == 0 return true
+    // we need to keep track of elements that have been visited using mask
+
+    int sum = accumulate(nums.begin(), nums.end(), 0);
+    if(sum % k != 0) return false;
+
+    int target = sum/k;
+    sort(nums.rbegin(), nums.rend());
+
+    int totalMasks = 1 << nums.size();
+    vector<int> memo(totalMasks, -1);
+
+    return solve(0, 0, target, nums, k, memo);
 }
 ```
