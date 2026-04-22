@@ -687,7 +687,7 @@ Constraints:
 > if (j not in mask)
 >
 >       - if(pos%j == 0 || j%pos == 0)
->           -  dp[newMask] = dp[newMask]
+>           -  dp[newMask] += dp[mask]
 
 ```cpp
 int getSetBits(int mask) {
