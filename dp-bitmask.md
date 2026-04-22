@@ -342,3 +342,80 @@ int minimumXORSum(vector<int>& nums1, vector<int>& nums2) {
     return dp[finalMask];
 }
 ```
+---
+
+## 3. Shortest Path Visiting All Nodes
+[Leetcode link](https://leetcode.com/problems/shortest-path-visiting-all-nodes/description/)
+
+You have an undirected, connected graph of n nodes labeled from 0 to n - 1. 
+You are given an array graph where graph[i] is a list of all the nodes connected with node i by an edge.
+
+Return the length of the shortest path that visits every node. You may start and stop at any node, 
+you may revisit nodes multiple times, and you may reuse edges.
+
+```mermaid
+graph LR
+    0 --- 1
+    0 --- 2
+    0 --- 3
+```
+
+Input: graph = [[1,2,3],[0],[0],[0]]
+- Output: 4
+- Explanation: One possible path is [1,0,2,0,3]
+
+```
+Constraints:
+    n == graph.length
+    1 <= n <= 12
+    0 <= graph[i].length < n
+```
+
+### Intuition
+
+> [!IMPORTANT]
+> dp[mask][i] = shortest path length while visiting all nodes in mask and currently at i node
+>
+> Use multinode BFS -- since graph is unweighted, and we need shortest path
+
+```cpp
+int shortestPathLength(vector<vector<int>>& graph) {
+    // Use multi source BFS -- since need to find shortest path and graph is unweighted
+    // start with every node
+    // state is (visited_mask, curr_node)
+    // dp[mask][i] = shortest path while visiting all nodes in mask and currently at node i 
+
+    int n = graph.size();
+    int totalMasks = 1<<n;
+
+    vector<vector<int>> dp(totalMasks, vector<int>(n, INT_MAX));
+    queue<pair<int, int>> q; // mask, currNode
+
+    for(int i=0; i<n; i++) {
+        int mask = 1<<i;
+        dp[mask][i] = 0;
+        q.push({mask, i});
+    }
+
+    int finalMask = (1<<n) - 1;
+    while(!q.empty()) {
+        auto [mask, curr] = q.front();
+        q.pop();
+        
+        int steps = dp[mask][curr];
+        if(mask == finalMask) return steps;
+
+        for(int next: graph[curr]) {
+            int newMask = mask | (1 << next);
+
+            if(dp[newMask][next] == INT_MAX) {
+                dp[newMask][next] = steps+1;
+                q.push({newMask, next});
+            }
+            
+        }
+    }
+
+    return -1;
+}
+```
