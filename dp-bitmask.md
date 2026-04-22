@@ -647,3 +647,81 @@ bool canIWin(int maxChoosableInteger, int desiredTotal) {
     return solve(0, desiredTotal, maxChoosableInteger, memo);
 }
 ```
+
+### 5. Beautiful Arrangement
+[Leetcode link](https://leetcode.com/problems/beautiful-arrangement/description/)
+
+Suppose you have n integers labeled 1 through n. A permutation of those n integers perm 
+(1-indexed) is considered a beautiful arrangement if for every i (1 <= i <= n), 
+either of the following is true:
+
+> perm[i] is divisible by i.
+> i is divisible by perm[i].
+- Given an integer n, return the number of the beautiful arrangements that you can construct.
+
+Example 1:
+
+Input: n = 2
+Output: 2
+Explanation: 
+- The first beautiful arrangement is [1,2]:
+    - perm[1] = 1 is divisible by i = 1
+    - perm[2] = 2 is divisible by i = 2
+- The second beautiful arrangement is [2,1]:
+    - perm[1] = 2 is divisible by i = 1
+    - i = 2 is divisible by perm[2] = 1
+
+```
+Constraints:
+
+1 <= n <= 15
+```
+
+### Intuition
+
+> [!IMPORTANT]
+> dp[mask] = number of beautiful arrangements if we use elements in mask
+>
+> number of setBits in mask + 1 = position of next element in arrangement = pos
+>
+> if (j not in mask)
+>
+>       - if(pos%j == 0 || j%pos == 0)
+>           -  dp[newMask] = dp[newMask]
+
+```cpp
+int getSetBits(int mask) {
+    int ans = 0;
+    while(mask) {
+        if(mask & 1) ans++;
+        mask >>= 1;
+    }
+    return ans;
+}
+int countArrangement(int n) {
+    // dp[mask] = count of beautiful arrangements till using elements in mask
+
+    int totalMasks = 1 << n;
+    vector<int> dp(totalMasks, 0);
+
+    dp[0] = 1;
+
+    for (int mask = 0; mask < totalMasks; mask++) {
+        int setBits = getSetBits(mask);
+        for (int j = 1; j <= n; j++) {
+            if (!(mask & (1 << (j - 1)))) {
+                
+                int newMask = mask | (1<<(j-1));
+                int pos = setBits+1;
+                
+                if (j % pos == 0 || pos % j == 0) {
+                    dp[mask | (1 << (j - 1))] += dp[mask];
+                }
+            }
+        }
+    }
+
+    int finalMask = (1<<n) - 1;
+    return dp[finalMask];
+}
+```
