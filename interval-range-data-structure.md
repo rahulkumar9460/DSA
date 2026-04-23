@@ -134,3 +134,69 @@ vector<vector<int>> merge(vector<vector<int>>& intervals) {
     return ans;
     }
 ```
+---
+
+## 2. Insert Interval
+[Leetcode link](https://leetcode.com/problems/insert-interval/description/)
+
+You are given an array of non-overlapping intervals intervals where intervals[i] = [starti, endi] 
+represent the start and the end of the ith interval and intervals is sorted in ascending order by starti
+
+Insert newInterval into intervals such that intervals is still sorted in ascending order by starti 
+and intervals still does not have any overlapping intervals (merge overlapping intervals if necessary).
+
+> Return intervals after the insertion.
+
+```
+Input: intervals = [[1,2],[3,5],[6,7],[8,10],[12,16]], newInterval = [4,8]
+    Output: [[1,2],[3,10],[12,16]]
+    Explanation: Because the new interval [4,8] overlaps with [3,5],[6,7],[8,10].
+```
+
+### Intuition
+> [!IMPORTANT]
+>
+> - int left = newInterval[0];
+> - int right = newInterval[1];
+>
+> upper_bound will give us iterator 'it' such that it->first > left
+>
+> overlap may start from it-1
+> 
+>           if(it != ans.begin()) {
+>               it--;
+>               if(it->second < left) it++; // if it doesnt overlap, move further
+>           }
+>
+> if a interval overlaps with {left, right}, partially or fully
+>
+>           left = min(left, it->first)
+>           right = max(rightm it->second)
+>           and.erase(it); // erase it since it is included in {left, right}
+>
+> Now insert {left, right}
+
+```cpp
+vector<vector<int>> insert(vector<vector<int>>& intervals, vector<int>& newInterval) {
+    vector<vector<int>> ans(intervals.begin(), intervals.end());
+
+    auto it = upper_bound(ans.begin(), ans.end(), newInterval);
+    int left = newInterval[0];
+    int right = newInterval[1];
+
+    if(it != ans.begin()) {
+        it--;
+        if((*it)[1] < left) it++; //  it doesnt overlap, move further
+    } 
+
+    while(it != ans.end() && (*it)[0] <= right) { // ovelapping intervals
+        left = min(left, (*it)[0]);
+        right = max(right, (*it)[1]);
+        ans.erase(it);
+    }
+
+    ans.insert(it, {left, right});
+
+    return ans;
+}
+```
