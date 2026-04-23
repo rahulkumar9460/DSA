@@ -152,19 +152,6 @@ Think:
 
 ---
 
-## 🔥 Classic Problems
-
-* Travelling Salesman Problem (TSP)
-* Assignment Problem
-* Minimum XOR Sum
-* Shortest Path Visiting All Nodes
-* Partition to K Equal Sum Subsets
-* Can I Win
-* Beautiful Arrangement
-* Minimum Cost to Connect Two Groups
-
----
-
 ## ⚡ Complexity
 
 ```
@@ -723,5 +710,93 @@ int countArrangement(int n) {
 
     int finalMask = (1<<n) - 1;
     return dp[finalMask];
+}
+```
+
+---
+
+## 6. Minimum Cost to Connect Two Groups of Points
+[Leetcode link](https://leetcode.com/problems/minimum-cost-to-connect-two-groups-of-points/description/)
+
+You are given two groups of points where the first group has size1 points, 
+the second group has size2 points, and size1 >= size2.
+
+The cost of the connection between any two points are given in an size1 x size2 matrix 
+where cost[i][j] is the cost of connecting point i of the first group and point j of the second group. 
+The groups are connected if each point in both groups is connected to one or more points in 
+the opposite group. In other words, each point in the first group must be connected to at 
+least one point in the second group, and each point in the second group must be connected to 
+at least one point in the first group.
+
+> Return the minimum cost it takes to connect the two groups.
+
+Input: cost = [[15, 96], [36, 2]]
+Output: 17
+Explanation: The optimal way of connecting the groups is:
+- 1--A
+- 2--B
+This results in a total cost of 17.
+
+### Intuition
+> [!IMPORTANT]
+> Assign each group1 node → one group2 node
+>
+> mask --> tells which elements from group2 are assigned
+>
+> dp[i][mask] = min cost to connect first i elements from group1 to elements in mask from group2
+>
+> dp[0][0] = 0
+>
+> Calculate dp[1][mask], dp[2][mask], .......dp[n][mask]
+>
+> Now all elements from group1 are connected
+> at the end there will be some elements from group 2 still unassigned
+>
+> Just assign them to element2 from group1 with minimum cost
+
+```cpp
+int connectTwoGroups(vector<vector<int>>& cost) {
+    int n = cost.size();
+    int m = cost[0].size();
+
+    int totalMasks = 1 << m;
+    vector<vector<int>> dp(n+1, vector<int>(totalMasks, INT_MAX));
+
+    dp[0][0] = 0;
+
+    for(int i=0; i<n; i++) { // start connecting elements from group1 one by one
+        for(int mask=0; mask<totalMasks; mask++) {
+            if(dp[i][mask] == INT_MAX) continue;
+
+            for(int j=0; j<m; j++) {
+                int newMask = mask | (1<<j);
+                
+                dp[i+1][newMask] = min(dp[i+1][newMask], dp[i][mask] + cost[i][j]);
+            }
+        }
+    }
+
+    vector<int> minCost(m, INT_MAX);
+    for(int j=0; j<m; j++) {
+        for(int i=0; i<n; i++) {
+            minCost[j] = min(minCost[j], cost[i][j]);
+        }
+    }
+
+    int ans = INT_MAX;
+    for(int mask=0; mask<totalMasks; mask++) {
+        if(dp[n][mask] == INT_MAX) continue;
+        
+        int extra = 0;
+        for(int j=0; j<m; j++) {
+            if(!(mask & (1<<j))) {
+                extra += minCost[j];
+            }
+        }
+
+        ans = min(ans, dp[n][mask]+extra);
+    }
+
+    return ans;
 }
 ```
