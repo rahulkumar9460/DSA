@@ -107,7 +107,7 @@ Constraints:
 >
 > iterate over i = 1 to n
 >
-> last = ans.back()
+>       last = ans.back()
 >
 >       if last[1] >= intervals[i][0] --> intervals[i] overlaps with last
 >           last[1] = max(last[1], intervals[i][1]) --> merge both intervals
