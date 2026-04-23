@@ -97,7 +97,7 @@ Constraints:
 >
 > since 4 < 5 --> overlap
 >
-> combined intervals = [2, max(5, 8)] == [2, 8]
+>       combined interval = [2, max(5, 8)] == [2, 8]
 
 > [!IMPORTANT]
 >
