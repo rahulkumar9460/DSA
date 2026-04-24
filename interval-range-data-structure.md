@@ -430,6 +430,7 @@ At most 10^4 calls will be made to addRange, queryRange, and removeRange.
 >           Now it is guaranteed that 'x' will before 'itr', not 'itr' itself or after it
 >
 > - add range (start, end)
+>
 >           find upper bound of 'start', let call it = itr
 >           Now do itr-- since it might overlap with (start, end)
 >        
@@ -443,6 +444,7 @@ At most 10^4 calls will be made to addRange, queryRange, and removeRange.
 >           Now insert (start, end) --> set.insert({start, end})
 >
 > - delete range (start, end)
+>
 >           this range (start, end) might include multiple ranges that need to deleted from set
 >           and boundary of start and end there can be partially overlapping range
 >
