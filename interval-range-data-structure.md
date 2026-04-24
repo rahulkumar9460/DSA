@@ -547,16 +547,20 @@ left edge aligned with X-coordinate lefti.
 > - when a squre (start, end) falls on another square
 >   - there can be three scenarios
 >
->        Below square might get cut on left side
+>        1. Below square might get cut on left side
+>
 >             <--------->
+>
 >         <------>
 >
->       Below square might get overlap
+>       2. Below square might get overlap
 >               <-------->
 >                <------>
 >
->       Below suqre might get cur on right side
+>       3. Below suqre might get cur on right side
+>
 >               <-------->
+>
 >                      <----->
 >
 > In each cases we the height becomes = height of below + height of falling square
