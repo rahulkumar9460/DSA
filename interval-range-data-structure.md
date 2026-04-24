@@ -394,3 +394,130 @@ public:
 };
 ```
 
+---
+
+## 6. Range Module
+[Leetcode link](https://leetcode.com/problems/range-module/description/)
+
+RangeModule() Initializes the object of the data structure.
+
+void addRange(int left, int right) Adds the half-open interval [left, right),
+tracking every real number in that interval. Adding an interval that partially overlaps 
+with currently tracked numbers should add any numbers in the interval [left, right) 
+that are not already tracked.
+
+boolean queryRange(int left, int right) Returns true if every real number in the interval
+[left, right) is currently being tracked, and false otherwise.
+void removeRange(int left, int right) Stops tracking every real number currently being 
+tracked in the half-open interval [left, right).
+
+```
+Constraints:
+
+1 <= left < right <= 10^9
+At most 10^4 calls will be made to addRange, queryRange, and removeRange.
+```
+
+### Intuition
+> [!IMPORTANT]
+>
+> - store these pairs into a set --> set<pair<int,int>>
+> - Now all ranges are in sorted order
+>
+> - query range
+>           To find a value 'x' use upper_bound(x) = itr
+>           Now it is guaranteed that 'x' will before 'itr', not 'itr' itself or after it
+>
+> - add range (start, end)
+>           find upper bound of 'start', let call it = itr
+>           Now do itr-- since it might overlap with (start, end)
+>        
+>           
+>           Now we need to merge intervals
+>           If itr->first <= end
+>               start = min(start, itr->first)
+>               end = max(end, itr->second)
+>               set.erase(itr) // we can earse itr since it has been included by range {start, end}
+>
+>           Now insert (start, end) --> set.insert({start, end})
+>
+> - delete range (start, end)
+>           this range (start, end) might include multiple ranges that need to deleted from set
+>           and boundary of start and end there can be partially overlapping range
+>
+>           for example: (1, 5) and we need to delete (3, 8) so  
+>           (1, 3) we still have to keep and (3, 5) we need to delete
+>
+>           find upper bound of 'start' call it 'itr'
+>           Do itr-- since it might overlap with (start, end)
+>   
+>           declare one vector<pair<int,int>> toAdd, to add the ranges that gets cut off at boundaries
+>       
+>           Now iterate: while(itr->first < end)
+>               if itr->first < start
+>                   toAdd.push({itr->first, start})
+>               if itr->second > end
+>                   toAdd.push({end, itr->second})
+>               itr = set.erase(itr)
+>
+>
+>           Now push back these partially cut of ranges from toAdd
+>           for(r : toAdd) set.insert(r)         
+
+
+```cpp
+class RangeModule {
+public:
+    set<pair<int,int>> ranges;
+    RangeModule() {
+        
+    }
+    
+    void addRange(int left, int right) {
+        auto it = ranges.upper_bound({left, INT_MAX});
+        if(it != ranges.begin()) {
+            it--;
+            if(it->second < left) it++;
+        }
+
+        while(it != ranges.end() && it->first <= right) {
+            left = min(left, it->first);
+            right = max(right, it->second);
+            it = ranges.erase(it);
+        }
+
+        ranges.insert({left, right});
+    }
+    
+    bool queryRange(int left, int right) {
+        auto it = ranges.upper_bound({left, INT_MAX});
+        if(it != ranges.begin()) {
+            it--;
+        }
+
+        return it->first <= left && it->second >= right;
+    }
+    
+    void removeRange(int left, int right) {
+        auto it = ranges.upper_bound({left, INT_MAX});
+        if(it != ranges.begin()) {
+            it--;
+            if(it->second <= left) it++;
+        }
+
+        vector<pair<int,int>> toAdd;
+        while(it != ranges.end() && it->first < right) {
+            if(it->first < left)
+                toAdd.push_back({it->first, left});
+
+            if(it->second > right)
+                toAdd.push_back({right, it->second});
+
+            it = ranges.erase(it);
+        }
+
+        for(auto &p : toAdd)
+            ranges.insert(p);
+    }
+};
+```
