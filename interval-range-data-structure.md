@@ -445,12 +445,12 @@ At most 10^4 calls will be made to addRange, queryRange, and removeRange.
 >
 > - delete range (start, end)
 >
->           this range (start, end) might include multiple ranges that need to deleted from set
->           and boundary of start and end there can be partially overlapping range
+>    1. this range (start, end) might include multiple ranges that need to deleted from set
+>    2. and boundary of start and end there can be partially overlapping range
 >
->           for example: (1, 5) and we need to delete (3, 8) so  
->           (1, 3) we still have to keep and (3, 5) we need to delete
-> - 
+>    3. for example: (1, 5) and we need to delete (3, 8) so  
+>    4. (1, 3) we still have to keep and (3, 5) we need to delete
+> 
 >
 >           find upper bound of 'start' call it 'itr'
 >           Do itr-- since it might overlap with (start, end)
