@@ -356,7 +356,7 @@ Implement the MyCalendarTwo class:
 > [!IMPORTANT]
 >
 > maintain a array of overlapping intervals
-> two bookings [1, 5] and [2, 9] --> overlapping interval = [2, 5]
+> - two bookings [1, 5] and [2, 9] --> overlapping interval = [2, 5]
 >
 > put [2, 5] into overlaping intervals
 >
