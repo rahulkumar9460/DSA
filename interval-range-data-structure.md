@@ -549,12 +549,14 @@ left edge aligned with X-coordinate lefti.
 >
 >        1. Below square might get cut on left side
 >
->             <--------->
+>               <--------->
 >
->         <------>
+>           <------>
 >
 >       2. Below square might get overlap
+>
 >               <-------->
+>
 >                <------>
 >
 >       3. Below suqre might get cur on right side
