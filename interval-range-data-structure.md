@@ -525,3 +525,97 @@ public:
     }
 };
 ```
+
+---
+
+## 7. Falling Squares
+[Leetcode link](https://leetcode.com/problems/falling-squares/description/)
+
+There are several squares being dropped onto the X-axis of a 2D plane.
+
+You are given a 2D integer array positions where positions[i] = [lefti, sideLengthi] 
+represents the ith square with a side length of sideLengthi that is dropped with its 
+left edge aligned with X-coordinate lefti.
+
+> After each square is dropped, you must record the height of the current tallest stack of squares.
+
+> Return an integer array ans where ans[i] represents the height described above after dropping the ith square.
+
+### Intuition
+> [!IMPORTANT]
+> - always maintain non-overlappig x-axis intervals
+> - when a squre (start, end) falls on another square
+>   - there can be three scenarios
+>
+>        Below square might get cut on left side
+>             <--------->
+>         <------>
+>
+>       Below square might get overlap
+>               <-------->
+>                <------>
+>
+>       Below suqre might get cur on right side
+>               <-------->
+>                      <----->
+>
+> In each cases we the height becomes = height of below + height of falling square
+> 1. we need to insert left cut part into set
+> 2. Compeletely remove the overlapped part
+> 3. we need to insert right cut part into set
+
+
+```cpp
+class Range {
+public:
+    set<pair<int, pair<int, int>>> ranges; // left, right, height
+    int add(int start, int end, int height) {
+        auto it = ranges.upper_bound({start, {INT_MAX, INT_MAX}});
+        if(it != ranges.begin()) {
+            it--;
+            if(it->second.first <= start) it++;
+        }
+
+        int maxHeight = 0;
+        vector<pair<int, pair<int, int>>> toAdd;
+
+        while(it != ranges.end() && it->first < end) { //iterating overlapping intervals
+            if(it->first < start) { // left cut part
+                toAdd.push_back({it->first, {start, it->second.second}});
+            }
+
+            if(it->second.first > end) { // right cut part
+                toAdd.push_back({end, {it->second.first, it->second.second}});
+            }
+            
+            maxHeight = max(maxHeight, it->second.second);
+            it = ranges.erase(it);
+        }
+
+        for(auto a : toAdd) ranges.insert(a);
+        ranges.insert({start, {end, maxHeight+height}});
+
+        return maxHeight+height;
+    }
+};
+class Solution {
+public:
+    vector<int> fallingSquares(vector<vector<int>>& positions) {
+        Range *range = new Range();
+        
+        vector<int> heights;
+        int maxHeight = 0;
+        for(auto &p : positions) {
+            int h = range->add(p[0], p[0]+p[1], p[1]);
+            maxHeight = max(maxHeight, h);
+            heights.push_back(maxHeight);
+        }
+
+        return heights;
+    }
+};
+```
+
+ 
+
+
