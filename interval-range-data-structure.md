@@ -266,3 +266,131 @@ public:
     }
 };
 ```
+
+---
+
+## 4. My Calendar I
+[Leetcode link](https://leetcode.com/problems/my-calendar-i/description/)
+
+Implement the MyCalendar class:
+
+> MyCalendar() Initializes the calendar object.
+> boolean book(int startTime, int endTime) Returns true 
+> if the event can be added to the calendar successfully without causing a double booking.
+>  Otherwise, return false and do not add the event to the calendar.
+
+```
+Input
+["MyCalendar", "book", "book", "book"]
+[[], [10, 20], [15, 25], [20, 30]]
+Output
+[null, true, false, true]
+
+Explanation
+MyCalendar myCalendar = new MyCalendar();
+myCalendar.book(10, 20); // return True
+myCalendar.book(15, 25); // return False, It can not be booked because time 15 is already booked by another event.
+myCalendar.book(20, 30); // return True, The event can be booked, as the first event takes every time less than 20, but not including 20.
+
+Constraints:
+
+    0 <= start < end <= 109
+    At most 1000 calls will be made to book
+```
+
+### Intuition:
+> [!IMPORTANT]
+> - store all evenets {start, end} into set
+>
+> Find it = upper_bound({start, INT_MAX})
+>
+>       it--;
+>       if(it->second <= start) it++
+>
+> - now for it we have it->first >= start
+>
+> check if (it->first < end) return false // intersection case
+>
+> else insert ({start, end})
+
+```cpp
+class MyCalendar {
+public:
+    set<pair<int,int>> bookings;
+    MyCalendar() {
+        
+    }
+    
+    bool book(int startTime, int endTime) {
+        auto it = bookings.upper_bound({startTime, INT_MAX});
+
+        if(it != bookings.begin()) {
+            it--;
+            if(it->second <= startTime) it++;
+        }
+
+        if(it != bookings.end() && it->first < endTime) {
+            return false;
+        }
+
+        bookings.insert({startTime, endTime});
+        return true;
+    }
+};
+```
+
+---
+
+## 5. My Calendar II
+[Leetcode link](https://leetcode.com/problems/my-calendar-ii/description/)
+
+Implement the MyCalendarTwo class:
+
+- MyCalendarTwo() Initializes the calendar object.
+- boolean book(int startTime, int endTime) Returns true if the event can be added to the calendar...
+- successfully without causing a triple booking. Otherwise, return false and do not add the event to the calendar.
+
+> at any time there should not be more than 2 meetings
+
+### Intuition
+> [!IMPORTANT]
+>
+> maintain a array of overlapping intervals
+> two bookings [1, 5] and [2, 9] --> overlapping interval = [2, 5]
+>
+> put [2, 5] into overlaping intervals
+>
+>       all time ranges in overlaping intervals have two bookings
+>
+> - if new bookings intersects with any of overlapping iterval
+> - it will cause triple bookings
+
+```cpp
+class MyCalendarTwo {
+public:
+    vector<pair<int,int>> bookings;
+    vector<pair<int, int>> overlaps;
+    MyCalendarTwo() {
+        
+    }
+    
+    bool book(int startTime, int endTime) {
+        // check for third booking
+        for(auto &p : overlaps) {
+            if(max(p.first, startTime) < min(p.second, endTime))
+                return false;
+        }
+
+        for(auto &p: bookings) {
+            int l = max(p.first, startTime);
+            int r = min(p.second, endTime);
+            if(l < r)
+                overlaps.push_back({l, r}); // insert overlaping interval
+        }
+
+        bookings.push_back({startTime, endTime});
+        return true;
+    }
+};
+```
+
