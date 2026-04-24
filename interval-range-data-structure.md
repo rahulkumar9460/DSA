@@ -425,6 +425,7 @@ At most 10^4 calls will be made to addRange, queryRange, and removeRange.
 > - Now all ranges are in sorted order
 >
 > - query range
+>
 >           To find a value 'x' use upper_bound(x) = itr
 >           Now it is guaranteed that 'x' will before 'itr', not 'itr' itself or after it
 >
