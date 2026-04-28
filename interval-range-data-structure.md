@@ -622,6 +622,83 @@ public:
 };
 ```
 
- 
+---
 
+## 8. Data Stream as Disjoint Intervals
+[Leetcode link](https://leetcode.com/problems/data-stream-as-disjoint-intervals/description/)
+
+Implement the SummaryRanges class:
+
+> SummaryRanges() Initializes the object with an empty stream.
+> void addNum(int value) Adds the integer value to the stream.
+> int[][] getIntervals() Returns a summary of the integers in the stream currently as a list of disjoint intervals [starti, endi]. The answer should be sorted by starti.
+
+Example:
+Input
+["SummaryRanges", "addNum", "getIntervals", "addNum", "getIntervals", "addNum", "getIntervals", "addNum", "getIntervals", "addNum", "getIntervals"]
+[[], [1], [], [3], [], [7], [], [2], [], [6], []]
+
+Output
+> [null, null, [[1, 1]], null, [[1, 1], [3, 3]], null, [[1, 1], [3, 3], [7, 7]], null, [[1, 3], [7, 7]], null, [[1, 3], [6, 7]]]
+
+Explanation
+- SummaryRanges summaryRanges = new SummaryRanges();
+- summaryRanges.addNum(1);      // arr = [1]
+- summaryRanges.getIntervals(); // return [[1, 1]]
+- summaryRanges.addNum(3);      // arr = [1, 3]
+- summaryRanges.getIntervals(); // return [[1, 1], [3, 3]]
+- summaryRanges.addNum(7);      // arr = [1, 3, 7]
+- summaryRanges.getIntervals(); // return [[1, 1], [3, 3], [7, 7]]
+- summaryRanges.addNum(2);      // arr = [1, 2, 3, 7]
+- summaryRanges.getIntervals(); // return [[1, 3], [7, 7]]
+- summaryRanges.addNum(6);      // arr = [1, 2, 3, 6, 7]
+- summaryRanges.getIntervals(); // return [[1, 3], [6, 7]]
+
+### Intuition
+> [!IMPORTANT]
+> Keep set of {start, end}
+>
+> {a, b} and {c, d} can become {a, d} if b <= (c + 1)
+> 
+> - {1, 1} and {1, 4} ==> {1, 4}
+> - {1, 1} and {2, 3} ==> {1, 3}
+> 
+
+```cpp
+class SummaryRanges {
+public:
+    set<pair<int,int>> ranges;
+    SummaryRanges() {
+        
+    }
+    
+    void addNum(int value) {
+        int start = value;
+        int end = value;
+        auto it = ranges.upper_bound({start, INT_MAX});
+
+        if(it != ranges.begin()) {
+            it--;
+            if(it->second < start-1) it++; // (1, 1) and (3, 3) case
+        }
+
+        while(it != ranges.end() && it->first <= end+1) {
+            start = min(start, it->first);
+            end = max(end, it->second);
+
+            it = ranges.erase(it);
+        }
+
+        ranges.insert({start, end});
+    }
+    
+    vector<vector<int>> getIntervals() {
+        vector<vector<int>> ans;
+        for(auto &r : ranges)
+            ans.push_back({r.first, r.second});
+        
+        return ans;
+    }
+};
+```
 
