@@ -679,7 +679,7 @@ public:
 
         if(it != ranges.begin()) {
             it--;
-            if(it->second < start-1) it++; // (1, 1) and (3, 3) case
+            if(it->second + 1 < start) it++; // (1, 1) and (3, 3) case
         }
 
         while(it != ranges.end() && it->first <= end+1) {
