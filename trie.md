@@ -244,13 +244,14 @@ Explanation
 > - But at update case (word, value) we need to again update the prefix sum for all nodes/chars in word
 > - 
 > - So maintain:
->               prefixSum, oldValue, isEnd
+>               prefixSum, wordValue, isEnd
 >
->               For update case get old value and subtract it from all nodes
+>               For update case get wordValue and subtract it from all nodes
 >               Now update the prefixSum with new value
 
 
 > insert (apple, 3)
+
 | Node | prefixSum | wordValue | isEnd |
 |------|-----------|-----------|-------|
 | a    | 3         | 0         | false |
@@ -261,6 +262,7 @@ Explanation
 
 
 > insert (app, 4)
+
 | Node | prefixSum | wordValue | isEnd |
 |------|-----------|-----------|-------|
 | a    | 7         | 0         | false |
@@ -270,6 +272,7 @@ Explanation
 | e    | 3         | 3         | true  |
 
 > insert (apple, 2)
+
 | Node | prefixSum | wordValue | isEnd |
 |------|-----------|-----------|-------|
 | a    | 6         | 0         | false |
@@ -284,13 +287,13 @@ class Node {
 public:
     Node* links[26];
     int prefixSum;
-    int oldValue;
+    int wordValue;
     bool endFlag;
 
     Node() {
         for(int i=0; i<26; i++) links[i] = NULL;
         prefixSum = 0;
-        oldValue = 0;
+        wordValue = 0;
         endFlag = false;
     }
 
@@ -308,12 +311,12 @@ public:
 
     void addPrefixSum(int val) {this->prefixSum += val;}
     int getPrefixSum() {return this->prefixSum;}
-    int getOldValue() {return this->oldValue;}
+    int getWordValue() {return this->wordValue;}
 
     bool isEnd() {return this->endFlag;}
     void markEnd(int value) {
         this->endFlag = true;
-        this->oldValue = value;
+        this->wordValue = value;
     }
 };
 
@@ -330,7 +333,7 @@ public:
             if(!curr->isKeyExists(c)) return 0;
             curr = curr->getKey(c);
         }
-        if(curr->isEnd()) return curr->getOldValue();
+        if(curr->isEnd()) return curr->getWordValue();
         return 0;
     }
     
