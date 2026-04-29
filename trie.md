@@ -249,7 +249,7 @@ Explanation
 >               For update case get old value and subtract it from all nodes
 >               Now update the prefixSum with new value
 
-```
+
 insert (apple, 3)
 -   | prefixSum | oldValue | isEnd
 a   |    3      |   0      | false
@@ -274,7 +274,7 @@ p   |     6     |   0      | false
 p   |     6     |   4      | true
 l   |     2     |   0      | false
 e   |     2     |   2      | true
-```
+
 
 ```cpp
 class Node {
