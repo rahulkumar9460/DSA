@@ -251,29 +251,29 @@ Explanation
 
 ```
 insert (apple, 3)
--   | prefixSum | oldValue
-a   |    3      |   0
-p   |    3      |   0
-p   |    3      |   0
-l   |    3      |   0
-e   |    3      |   3
+-   | prefixSum | oldValue | isEnd
+a   |    3      |   0      | false
+p   |    3      |   0      | false
+p   |    3      |   0      | false
+l   |    3      |   0      | false
+e   |    3      |   3      | true
 
 
 insert (app, 4)
--   | prefixSum | oldValue
-a   |     7     |   0
-p   |     7     |   0
-p   |     7     |   4
-l   |     3     |   0
-e   |     3     |   3
+-   | prefixSum | oldValue | isEnd
+a   |     7     |   0      | false
+p   |     7     |   0      | false
+p   |     7     |   4      | true
+l   |     3     |   0      | false
+e   |     3     |   3      | true
 
 insert (apple, 2)
--   | prefixSum | oldValue
-a   |     6     |   0
-p   |     6     |   0
-p   |     6     |   4
-l   |     2     |   0
-e   |     2     |   2
+-   | prefixSum | oldValue | isEnd
+a   |     6     |   0      | false
+p   |     6     |   0      | false
+p   |     6     |   4      | true
+l   |     2     |   0      | false
+e   |     2     |   2      | true
 ```
 
 ```cpp
