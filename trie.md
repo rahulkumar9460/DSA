@@ -86,8 +86,108 @@ Leetcode 745 → Prefix and Suffix Search
 ```
 
 # Common mistakes
+> [!WARNING]
+> - ❌ Using Trie when HashMap is enough
+> - ❌ Not freeing memory (in C++)
+> - ❌ Hardcoding 26 (fails for other charset)
+> - ❌ Not optimizing for constraints (TLE in Word Search II)
 
-1. ❌ Using Trie when HashMap is enough
-2. ❌ Not freeing memory (in C++)
-3. ❌ Hardcoding 26 (fails for other charset)
-4. ❌ Not optimizing for constraints (TLE in Word Search II)
+---
+
+## 1. Implement Trie (Prefix Tree)
+[Leetcode link](https://leetcode.com/problems/implement-trie-prefix-tree/description/)
+
+Implement the Trie class:
+
+- Trie() Initializes the trie object.
+- void insert(String word) Inserts the string word into the trie.
+- boolean search(String word) Returns true if the string word is in the trie (i.e., was inserted before), and false otherwise.
+- boolean startsWith(String prefix) Returns true if there is a previously inserted string word that has the prefix prefix, and false otherwise.
+
+```
+Input:
+["Trie", "insert", "search", "search", "startsWith", "insert", "search"]
+[[], ["apple"], ["apple"], ["app"], ["app"], ["app"], ["app"]]
+
+Output:
+[null, null, true, false, true, null, true]
+
+Explanation
+    Trie trie = new Trie();
+    trie.insert("apple");
+    trie.search("apple");   // return True
+    trie.search("app");     // return False
+    trie.startsWith("app"); // return True
+    trie.insert("app");
+    trie.search("app");     // return True
+```
+
+Constraints:
+- 1 <= word.length, prefix.length <= 2000
+- word and prefix consist only of lowercase English letters.
+- At most 3 * 10^4 calls in total will be made to insert, search, and startsWith.
+
+```cpp
+class Node {
+public:
+    Node* links[26];
+    bool endFlag;
+
+    Node() {
+        for(int i=0; i<26; i++) links[i] = NULL;
+        endFlag = false;
+    }
+
+    bool isKeyExists(char c) {
+        return this->links[c-'a'] != NULL;
+    }
+
+    void insertKey(char c) {
+        this->links[c-'a'] = new Node();
+    }
+
+    Node* getKey(char c) {
+        return this->links[c-'a'];
+    }
+
+    bool isEnd() {return this->endFlag;}
+    void markEnd() {this->endFlag = true;}
+};
+class Trie {
+public:
+    Node* head;
+    Trie() {
+        head = new Node();
+    }
+    
+    void insert(string word) {
+        Node* curr = head;
+        for(char &c : word) {
+            if(!curr->isKeyExists(c)) {
+                curr->insertKey(c);
+            }
+            curr = curr->getKey(c);
+        }
+
+        curr->markEnd();
+    }
+    
+    bool search(string word) {
+        Node* curr = head;
+        for(char &c : word) {
+            if(!curr->isKeyExists(c)) return false;
+            curr = curr->getKey(c);
+        }
+        return curr->isEnd();
+    }
+    
+    bool startsWith(string prefix) {
+        Node* curr = head;
+        for(char &c : prefix) {
+            if(!curr->isKeyExists(c)) return false;
+            curr = curr->getKey(c);
+        }
+        return true;
+    }
+};
+```
