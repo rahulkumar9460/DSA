@@ -204,3 +204,74 @@ Space:
     O(N*26*L) --> O(N*L)
 
 ```
+
+---
+
+## 2. Map Sum Pairs
+[Leetcode link](https://leetcode.com/problems/map-sum-pairs/description/)
+
+Implement the MapSum class:
+
+- MapSum() Initializes the MapSum object.
+- 
+- void insert(String key, int val) Inserts the key-val pair into the map. 
+- If the key already existed, the original key-value pair will be overridden to the new one.
+- 
+- int sum(string prefix) Returns the sum of all the pairs' value whose key starts with the prefix.
+
+```
+Input
+    ["MapSum", "insert", "sum", "insert", "sum", "insert", "sum"]
+    [[], ["apple", 3], ["ap"], ["app", 2], ["ap"], ["apple", 2], ["ap"]]
+
+Output
+    [null, null, 3, null, 5]
+
+Explanation
+    - MapSum mapSum = new MapSum();
+    - mapSum.insert("apple", 3);  
+    - mapSum.sum("ap");           // return 3 (apple = 3)
+    - mapSum.insert("app", 2);    
+    - mapSum.sum("ap");           // return 5 (apple + app = 3 + 2 = 5)
+    - mapSum.insert("apple", 2);
+    - mapSum.insert("ap");        // return 4 (apple + app = 2+2 = 5)
+```
+
+### Intuition
+> [!IMPORTANT]
+> - manage prefixSum at every node
+> - when a (new word, new value) is inserted, at every node or char add prefixSum
+> - But at update case (word, value) we need to again update the prefix sum for all nodes/chars in word
+> - 
+> - So maintain:
+>               prefixSum, oldValue, isEnd
+>
+>               For update case get old value and subtract it from all nodes
+>               Now update the prefixSum with new value
+
+```
+insert (apple, 3)
+-   | prefixSum | oldValue
+a   |    3      |   0
+p   |    3      |   0
+p   |    3      |   0
+l   |    3      |   0
+e   |    3      |   3
+
+
+insert (app, 4)
+-   | prefixSum | oldValue
+a   |     7     |   0
+p   |     7     |   0
+p   |     7     |   4
+l   |     3     |   0
+e   |     3     |   3
+
+insert (apple, 2)
+-   | prefixSum | oldValue
+a   |     6     |   0
+p   |     6     |   0
+p   |     6     |   4
+l   |     2     |   0
+e   |     2     |   2
+```
