@@ -250,30 +250,33 @@ Explanation
 >               Now update the prefixSum with new value
 
 
-insert (apple, 3)
--   | prefixSum | oldValue | isEnd
-a   |    3      |   0      | false
-p   |    3      |   0      | false
-p   |    3      |   0      | false
-l   |    3      |   0      | false
-e   |    3      |   3      | true
+> insert (apple, 3)
+| Node | prefixSum | wordValue | isEnd |
+|------|-----------|-----------|-------|
+| a    | 3         | 0         | false |
+| p    | 3         | 0         | false |
+| p    | 3         | 0         | false |
+| l    | 3         | 0         | false |
+| e    | 3         | 3         | true  |
 
 
-insert (app, 4)
--   | prefixSum | oldValue | isEnd
-a   |     7     |   0      | false
-p   |     7     |   0      | false
-p   |     7     |   4      | true
-l   |     3     |   0      | false
-e   |     3     |   3      | true
+> insert (app, 4)
+| Node | prefixSum | wordValue | isEnd |
+|------|-----------|-----------|-------|
+| a    | 7         | 0         | false |
+| p    | 7         | 0         | false |
+| p    | 7         | 4         | true  |
+| l    | 3         | 0         | false |
+| e    | 3         | 3         | true  |
 
-insert (apple, 2)
--   | prefixSum | oldValue | isEnd
-a   |     6     |   0      | false
-p   |     6     |   0      | false
-p   |     6     |   4      | true
-l   |     2     |   0      | false
-e   |     2     |   2      | true
+> insert (apple, 2)
+| Node | prefixSum | wordValue | isEnd |
+|------|-----------|-----------|-------|
+| a    | 6         | 0         | false |
+| p    | 6         | 0         | false |
+| p    | 6         | 4         | true  |
+| l    | 2         | 0         | false |
+| e    | 2         | 2         | true  |
 
 
 ```cpp
