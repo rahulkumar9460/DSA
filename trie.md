@@ -191,3 +191,16 @@ public:
     }
 };
 ```
+
+```
+L = max length of string
+
+Time: 
+    1. insert        --> O(L)
+    2. search        --> O(L)
+    3. startsWith    --> O(L)
+
+Space:
+    O(N*26*L) --> O(N*L)
+
+```
