@@ -275,3 +275,84 @@ p   |     6     |   4
 l   |     2     |   0
 e   |     2     |   2
 ```
+
+```cpp
+class Node {
+public:
+    Node* links[26];
+    int prefixSum;
+    int oldValue;
+    bool endFlag;
+
+    Node() {
+        for(int i=0; i<26; i++) links[i] = NULL;
+        prefixSum = 0;
+        oldValue = 0;
+        endFlag = false;
+    }
+
+    bool isKeyExists(char &c) {
+        return this->links[c-'a'] != NULL;
+    }
+
+    Node* getKey(char &c) {
+        return this->links[c-'a'];
+    }
+
+    void insertKey(char &c) {
+        this->links[c-'a'] = new Node();
+    }
+
+    void addPrefixSum(int val) {this->prefixSum += val;}
+    int getPrefixSum() {return this->prefixSum;}
+    int getOldValue() {return this->oldValue;}
+
+    bool isEnd() {return this->endFlag;}
+    void markEnd(int value) {
+        this->endFlag = true;
+        this->oldValue = value;
+    }
+};
+
+class MapSum {
+public:
+    Node* head = new Node();
+    MapSum() {
+        
+    }
+
+    int getOldValue(string &word) {
+        Node* curr = head;
+        for(char &c: word) {
+            if(!curr->isKeyExists(c)) return 0;
+            curr = curr->getKey(c);
+        }
+        if(curr->isEnd()) return curr->getOldValue();
+        return 0;
+    }
+    
+    void insert(string key, int val) {
+        int oldValue = getOldValue(key);
+
+        Node* curr = head;
+        for(char c: key) {
+            if(!curr->isKeyExists(c)) {
+                curr->insertKey(c);
+            }
+            curr = curr->getKey(c);
+            curr->addPrefixSum(val-oldValue);
+        }
+        curr->markEnd(val);
+    }
+    
+    int sum(string prefix) {
+        Node* curr = head;
+        for(char c: prefix) {
+            if(!curr->isKeyExists(c)) return 0;
+            curr = curr->getKey(c);
+        }
+
+        return curr->getPrefixSum();
+    }
+};
+```
