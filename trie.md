@@ -460,3 +460,19 @@ public:
     }
 };
 ```
+
+---
+
+## 4. Replace Words
+[Leetcode link](https://leetcode.com/problems/replace-words/description/)
+
+"help" is root of "helpful"
+simlimarly "cat" is the root of "cattle"
+
+Example 1:
+- Input: dictionary = ["cat","bat","rat"], sentence = "the cattle was rattled by the battery"
+- Output: "the cat was rat by the bat"
+
+Example 2:
+- Input: dictionary = ["a","b","c"], sentence = "aadsfasf absbs bbab cadsfafs"
+- Output: "a a b c"
