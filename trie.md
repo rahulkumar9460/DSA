@@ -476,3 +476,90 @@ Example 1:
 Example 2:
 - Input: dictionary = ["a","b","c"], sentence = "aadsfasf absbs bbab cadsfafs"
 - Output: "a a b c"
+
+### Intuition
+> [!IMPORTANT]
+>
+> We need to search for a prefix which exists as a word in trie
+> 
+>           search each char of each string in sentence in trie, if at some point
+>           in trie we end up at the end of some word, return it
+>   
+>           For example trie has word 'cat' and we are searching for 'cattle'
+>           at index 2 after matching 't' we see trie node has endFlag true
+
+```cpp
+class Node {
+public:
+    Node* links[26];
+    bool endFlag;
+
+    Node() {
+        for(int i=0; i<26; i++) links[i] = NULL;
+        endFlag = false;
+    }
+
+    bool isKey(char c) {return links[c-'a'] != NULL;}
+    Node* getKey(char c) {return links[c-'a'];}
+    void insertKey(char c) {links[c-'a'] = new Node();}
+    bool isEnd() {return endFlag;}
+    void markEnd() {endFlag = true;}
+};
+class Solution {
+public:
+    Node* head;
+    void insert(string word) {
+        Node* curr = head;
+        for(char c : word) {
+            if(!curr->isKey(c)) curr->insertKey(c);
+            curr = curr->getKey(c);
+        }
+        curr->markEnd();
+    }
+
+    string search(string word) {
+        Node* curr = head;
+
+        for(int i = 0; i < word.size(); i++) {
+            char c = word[i];
+            if(!curr->isKey(c)) return "";
+
+            curr = curr->getKey(c);
+            if(curr->isEnd()) return word.substr(0, i+1);
+        }
+
+        return "";
+    }
+
+    string replaceWords(vector<string>& dictionary, string sentence) {
+        this->head = new Node();
+        for(string &s: dictionary) insert(s);
+
+        vector<string> ans;
+        string s = "";
+        
+        for(int i=0; i<=sentence.size(); i++) {
+            if(sentence[i] == ' ' || i == sentence.size()) {
+                string match = search(s);
+
+                if(match == "") ans.push_back(s);
+                else ans.push_back(match);
+                
+                s = "";
+            } else {
+                s += sentence[i];
+            }
+        }
+
+        string res = "";
+        for(int i=0; i<ans.size(); i++) {
+            if(i == ans.size()-1) res += ans[i];
+            else res += (ans[i] + " ");
+        }
+
+        return res;
+
+    }
+
+};
+```
