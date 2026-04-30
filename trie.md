@@ -563,3 +563,88 @@ public:
 
 };
 ```
+
+---
+
+## 5. Longest Word in Dictionary
+[Leetcode link](https://leetcode.com/problems/longest-word-in-dictionary/description/)
+
+Given an array of strings words representing an English Dictionary, 
+return the longest word in words that can be built one character at a time by other words in words.
+
+If there is more than one possible answer, return the longest word with the smallest 
+lexicographical order. If there is no answer, return the empty string.
+
+Note that the word should be built from left to right with each additional character 
+being added to the end of a previous word. 
+
+```
+Input: words = ["a","banana","app","appl","ap","apply","apple"]
+Output: "apple"
+Explanation: Both "apply" and "apple" can be built from other words in the dictionary. However, "apple" is lexicographically smaller than "apply".
+```
+
+### Intuition
+> [!IMPORTANT]
+> - For string S to be valid answer, every prefix of it must exists in the dictionary
+> - Just need to modify the search method
+
+```cpp
+class Node {
+public:
+    Node* links[26];
+    bool endFlag;
+
+    Node() {
+        for(int i=0; i<26; i++) links[i] = NULL;
+        endFlag = false;
+    }
+
+    bool isKey(char c) {return links[c-'a'] != NULL;}
+    Node* getKey(char c) {return links[c-'a'];}
+    void insertKey(char c) {links[c-'a'] = new Node();}
+    bool isEnd() {return endFlag;}
+    void markEnd() {endFlag = true;}
+};
+
+class Solution {
+public:
+    Node* head;
+    void insert(string &word) {
+        Node* curr = head;
+        for(char c : word) {
+            if(!curr->isKey(c)) curr->insertKey(c);
+            curr = curr->getKey(c);
+        }
+        curr->markEnd();
+    }
+
+    bool search(string &word) {
+        Node* curr = head;
+        for(char c : word) {
+            if(!curr->isKey(c)) return false;
+            curr = curr->getKey(c);
+
+            if(!curr->isEnd()) return false; // every prefix must exists 
+        }
+        return curr->isEnd();
+    }
+
+    string longestWord(vector<string>& words) {
+        this->head = new Node();
+        for(string &word: words) insert(word);
+
+        string ans = "";
+        for(string &word: words) {
+            if(search(word)) {
+                if(word.size() == ans.size())
+                    ans = word < ans ? word : ans;
+                else if(word.size() > ans.size())
+                    ans = word;
+            }
+        }
+
+        return ans;
+    }
+};
+```
