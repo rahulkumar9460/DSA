@@ -362,3 +362,101 @@ public:
     }
 };
 ```
+
+---
+
+## 3. Design Add and Search Words Data Structure
+[Leetcode link](https://leetcode.com/problems/design-add-and-search-words-data-structure/description/)
+
+Design a data structure that supports adding new words and finding if a string matches any previously added string.
+
+Implement the WordDictionary class:
+
+> WordDictionary() Initializes the object.
+> void addWord(word) Adds word to the data structure, it can be matched later.
+> bool search(word) Returns true if there is any string in the data structure that matches word or false otherwise. 
+> word may contain dots '.' where dots can be matched with any letter.
+
+Input
+    ["WordDictionary","addWord","addWord","addWord","search","search","search","search"]
+    [[],["bad"],["dad"],["mad"],["pad"],["bad"],[".ad"],["b.."]]
+Output
+    [null,null,null,null,false,true,true,true]
+
+Explanation
+- WordDictionary wordDictionary = new WordDictionary();
+- wordDictionary.addWord("bad");
+- wordDictionary.addWord("dad");
+- wordDictionary.addWord("mad");
+- wordDictionary.search("pad"); // return False
+- wordDictionary.search("bad"); // return True
+- wordDictionary.search(".ad"); // return True
+- wordDictionary.search("b.."); // return True
+
+### Intuition
+> [!IMPORTANT]
+> - we need to worry about wild card matching
+>
+>           If we are at node 'curr' and we have the char '.' now we have to take all possible paths 
+>           from node 'curr' and see if any path results a success
+>
+>           If at node 'curr' and we have a char 'a'<= c <='z' then we just need to follow one path
+>           which is curr->getKey(c)
+
+
+```cpp
+class Node {
+public:
+    Node* links[26];
+    bool endFlag;
+
+    Node() {
+        for(int i=0; i<26; i++) links[i] = NULL;
+        endFlag = false;
+    }
+
+    bool isKey(char c) {return links[c-'a'] != NULL;}
+    Node* getKey(char c) {return links[c-'a'];}
+    void insertKey(char c) {links[c-'a'] = new Node();}
+    bool isEnd() {return endFlag;}
+    void markEnd() {endFlag = true;}
+};
+class WordDictionary {
+public:
+    Node* head;
+    WordDictionary() {
+        head = new Node();
+    }
+    
+    void addWord(string word) {
+        Node* curr = head;
+        for(char c: word) {
+            if(!curr->isKey(c)) curr->insertKey(c);
+            curr = curr->getKey(c);
+        }
+        curr->markEnd();
+    }
+
+    bool dfs(string &word, int idx, Node* node) {
+        if(!node) return false;
+        if(idx == word.size()) return node->isEnd();
+        
+
+        if(word[idx] == '.') {
+            for(int i=0; i<26; i++) { // follow all paths
+                if(node->isKey('a'+i) && dfs(word, idx+1, node->getKey('a'+i)))
+                    return true;
+            }
+        } else {
+            if(node->isKey(word[idx]) && dfs(word, idx+1, node->getKey(word[idx]))) // follow matching path
+                return true;
+        }
+
+        return false;
+    }
+    
+    bool search(string word) {
+        return dfs(word, 0, head);
+    }
+};
+```
