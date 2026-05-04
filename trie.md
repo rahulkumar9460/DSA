@@ -648,3 +648,194 @@ public:
     }
 };
 ```
+---
+
+## 5. Word Search II
+[Leetcode link](https://leetcode.com/problems/word-search-ii/description/)
+
+Given an m x n board of characters and a list of strings words, return all words on the board.
+
+Each word must be constructed from letters of sequentially adjacent cells, where adjacent 
+cells are horizontally or vertically neighboring. The same letter cell may not be used more than once in a word
+
+> [!NOTE]
+> Brute force
+> - For everyword run a DFS and do backtrack
+
+```cpp
+class Solution {
+public:
+    int n;
+    int m;
+    vector<vector<int>> dir={{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
+
+    bool dfs(vector<vector<char>>& board, string &word, int idx, int i, int j) {
+        if(idx == word.size()) return true;
+        if(i<0 || j<0 || i>=n || j>=m || board[i][j]=='*' || board[i][j] != word[idx]) return false;
+
+        char c = board[i][j];
+        board[i][j] = '*';
+
+        for(auto &d: dir) {
+            int x = i+d[0];
+            int y = j+d[1];
+
+            if(dfs(board, word, idx+1, x, y)) {
+                board[i][j] = c;
+                return true;
+            }
+        }
+
+        board[i][j] = c;
+        return false;
+    }
+
+    vector<string> findWords(vector<vector<char>>& board, vector<string>& words) {
+        n = board.size();
+        m = board[0].size();
+
+        vector<string> ans = {};
+
+        for(string &w: words) {
+            bool flag = true;
+            for(int i=0; i<n && flag; i++) {
+                for(int j=0; j<m; j++) {
+                    if(board[i][j] == w[0]) {
+                        if(dfs(board, w, 0, i, j)){
+                            ans.push_back(w);
+                            flag = false;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        return ans;
+    }
+};
+```
+
+> [!WARNING]
+> the time complexity is O(w * n * m * 4^L)
+>
+> - w is number of words
+> - L is max length of word
+> - 4^L is time complexity of DFS
+>           this will give TLE
+
+> [!IMPORTANT]
+> Better approach
+> - Make a trie with all words
+> - For each char in board see if head->isKey(c)
+>       - if yes then take the currNode = head->getKey(c) and pass it to DFS
+> - Now while running DFS move to next cell(x, y) only if currNode->isKey(board[x][y])
+>           Base condition would be currNode->getWord() != "" --> then ans.push_back(currNode->getWord())
+>
+>           Instead of: W separate searches
+>           ONE board traversal - guided by all words at once
+
+
+```
+words = {cat, car, cart, care, cap, dog}
+Board:
+c a r
+t e p
+d o g
+
+make trie:
+root
+ ├── c
+ │    └── a
+ │         ├── t   (cat)
+ │         ├── r   (car)
+ │         │    ├── t (cart)
+ │         │    └── e (care)
+ │         └── p   (cap)
+ └── d
+      └── o
+           └── g   (dog)
+
+
+At every cell in board:
+    if head->isKey(board[i][j])
+        dfs(board, head->getKey(board[i][j]), i, j)
+
+
+Time complecity --> O(n * m * 3^L)
+
+```
+
+```cpp
+class Node {
+    Node* links[26];
+    string word;
+public:
+    Node() {
+        for(int i=0; i<26; i++) links[i] = NULL;
+        word = "";
+    }
+
+    bool isKey(char c) {return links[c-'a'] != NULL;}
+    Node* getKey(char c) {return links[c-'a'];}
+    void setKey(char c) {links[c-'a'] = new Node();}
+    string getWord() {return word;}
+    void setWord(string s) {word = s;}
+};
+
+class Solution {
+    Node* head;
+    int n;
+    int m;
+    unordered_set<string> ans;
+
+    vector<vector<int>> dir = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+public:
+    void insert(string &word) {
+        Node* curr = head;
+        for(char c : word) {
+            if(!curr->isKey(c)) curr->setKey(c);
+            curr = curr->getKey(c);
+        }
+        curr->setWord(word);
+    }
+
+    void dfs(vector<vector<char>>& board, int i, int j, Node* curr) {
+        if(curr->getWord() != "") ans.insert(curr->getWord());
+
+        char c = board[i][j];
+        board[i][j] = '*';
+
+        for(auto &d: dir) {
+            int x = i+d[0];
+            int y = j+d[1];
+
+            if(x<0 || y<0 || x>=n || y>=m || board[x][y]=='*' || !curr->isKey(board[x][y])) continue;
+            dfs(board, x, y, curr->getKey(board[x][y]));
+        }
+
+        board[i][j] = c;
+    }
+
+    vector<string> findWords(vector<vector<char>>& board, vector<string>& words) {
+        this->head = new Node();
+        ans = {};
+        n = board.size();
+        m = board[0].size();
+
+        for(string &s: words) insert(s);
+
+        for(int i=0; i<n; i++) {
+            for(int j=0; j<m; j++) {
+                if(head->isKey(board[i][j]))
+                    dfs(board, i, j, head->getKey(board[i][j]));
+            }
+        }
+
+        vector<string> res;
+        for(string s: ans) res.push_back(s);
+
+        return res;
+    }
+};
+```
