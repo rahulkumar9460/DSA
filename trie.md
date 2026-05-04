@@ -919,14 +919,14 @@ class Solution {
         int ans = 0;
         Node* curr = head;
         for(int i=30; i>=0; i--) {
-            int x = (num >> i) & 1;
+            int x = (num >> i) & 1; // curr bit
 
-            int want = 1-x;
+            int want = 1-x; // if curr bit is 1, we want 0, if 0, we want 1
             if(curr->getKey(want)) {
-                ans = ans | (1 << i);
+                ans = ans | (1 << i); // if want bit is there then update set that bit 1 in maxXor
                 curr = curr->getKey(want);
-            } else {
-                curr = curr->getKey(x);
+            } else { 
+                curr = curr->getKey(x); // else that bit in maxXor will be 0
             }
         }
 
