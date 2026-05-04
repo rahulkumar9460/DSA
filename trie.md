@@ -839,3 +839,120 @@ public:
     }
 };
 ```
+
+---
+
+## 6. Maximum XOR of Two Numbers in an Array
+[Leetcode link](https://leetcode.com/problems/maximum-xor-of-two-numbers-in-an-array/description/)
+
+Given an integer array nums, return the maximum result of nums[i] XOR nums[j], where 0 <= i <= j < n.
+
+Example:
+Input: nums = [3,10,5,25,2,8]
+Output: 28
+Explanation: The maximum result is 5 XOR 25 = 28.
+
+```
+root
+├── 0
+│   ├── 0
+│   │   ├── 0
+│   │   │   ├── 1
+│   │   │   │   ├── 1   -> 3   (00011)
+│   │   │   │   └── 0   -> 2   (00010)
+│   │   └── 1
+│   │       └── 0
+│   │           └── 1   -> 5   (00101)
+│   └── 1
+│       ├── 0
+│       │   ├── 1
+│       │   │   └── 0   -> 10  (01010)
+│       │   └── 0
+│       │       └── 0   -> 8   (01000)
+└── 1
+    └── 1
+        └── 0
+            └── 0
+                └── 1   -> 25  (11001)
+```
+### Intuition
+> [!IMPORTANT]
+> For 5 (00101) -- lets calculate max XOR:
+> 
+> we just need to pick opposite bit if possible for max XOR
+>
+> - for 5th bit which is 0 --> pick 1
+> - For 4th bit which is 0 --> pick 1
+> - For 3rd bit which is 1 --> pick 0
+> - For 2rd bit which is 0 --> pick 1 but on this path there is no 1 --> pick 0
+> - For 1st bit which is 1 --> pick 0 but on this path there is no 0 --> pick 1
+>
+>               maxXor = (00101) ^ (11001) = (11110) = 28
+
+```cpp
+class Node {
+    Node* links[2];
+public:
+    Node() {
+        for(int i=0; i<2; i++) links[i] = NULL;
+    }
+
+    bool isKey(int a) {return links[a] != NULL;}
+    Node* getKey(int a) {return links[a];}
+    void setKey(int a) {links[a] = new Node();}
+};
+
+class Solution {
+    Node* head;
+
+    void insert(int num) {
+        Node* curr = head;
+        for(int i=30; i>=0; i--) {
+            int x = (num >> i) & 1; // i-th bit
+
+            if(!curr->isKey(x)) curr->setKey(x);
+            curr = curr->getKey(x);
+        }
+    }
+
+    int search(int num) {
+        int ans = 0;
+        Node* curr = head;
+        for(int i=30; i>=0; i--) {
+            int x = (num >> i) & 1;
+
+            if(x == 1) {
+                if(curr->getKey(0)) {
+                    ans = ans | (1 << i);
+                    curr = curr->getKey(0);
+                } else {
+                    curr = curr->getKey(1);
+                }
+            } else {
+                if(curr->getKey(1)) {
+                    ans = ans | (1 << i);
+                    curr = curr->getKey(1);
+                } else {
+                    curr = curr->getKey(0);
+                }
+            }
+        }
+
+        return ans;
+    }
+public:
+    int findMaximumXOR(vector<int>& nums) {
+        // max xor --> avoid same set bit in both numbers
+        this->head = new Node();
+
+        for(int num : nums) insert(num);
+
+        int ans = 0;
+        for(int num : nums) {
+            ans = max(ans, search(num));
+        }
+
+        return ans;
+    }
+};
+```
