@@ -921,20 +921,12 @@ class Solution {
         for(int i=30; i>=0; i--) {
             int x = (num >> i) & 1;
 
-            if(x == 1) {
-                if(curr->getKey(0)) {
-                    ans = ans | (1 << i);
-                    curr = curr->getKey(0);
-                } else {
-                    curr = curr->getKey(1);
-                }
+            int want = 1-x;
+            if(curr->getKey(want)) {
+                ans = ans | (1 << i);
+                curr = curr->getKey(want);
             } else {
-                if(curr->getKey(1)) {
-                    ans = ans | (1 << i);
-                    curr = curr->getKey(1);
-                } else {
-                    curr = curr->getKey(0);
-                }
+                curr = curr->getKey(x);
             }
         }
 
