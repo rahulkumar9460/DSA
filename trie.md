@@ -948,3 +948,114 @@ public:
     }
 };
 ```
+
+---
+
+## 7. Maximum XOR With an Element From Array
+[Leetcode link](https://leetcode.com/problems/maximum-xor-with-an-element-from-array/description/)
+
+The answer to the ith query is the maximum bitwise XOR value of xi and any element of nums 
+that does not exceed mi. In other words, the answer is max(nums[j] XOR xi) for all j 
+such that nums[j] <= mi. 
+
+If all elements in nums are larger than mi, then the answer is -1.
+
+Input: nums = [5,2,4,6,6,3], queries = [[12,4],[8,1],[6,3]]
+Output: [15,-1,5]
+
+2 - 0010
+3 - 0011
+4 - 0100
+5 - 0101
+6 - 0110
+12- 1100
+
+Explanation:
+1) 2, 3 and 4 are the only integers not greater than 4. 2 XOR 12 = 14 and 3 XOR 12 = 15 and 4 XOR 12 = 8. The larger is 15.
+2) No elements greater than 1. So answer is -1
+3) 3, 4, 5, 6 are greater than 3. Answer is 5
+
+### Intuition
+> [!IMPORTANT]
+> - Sort nums in increasing order
+> - Process queries in increasing order of q[1]
+> - if we are processing query[i]
+> - put all elements into trie which are less then query[i][1]
+
+```cpp
+class Node {
+    Node* links[2];
+public:
+    Node() {
+        for(int i=0; i<2; i++) links[i] = NULL;
+    }
+
+    bool isKey(int a) {return links[a] != NULL;}
+    Node* getKey(int a) {return links[a];}
+    void setKey(int a) {links[a] = new Node();}
+};
+
+bool compare(vector<int>&a, vector<int> &b) {
+    return a[1] < b[1];
+}
+
+class Solution {
+    Node* head;
+
+    void insert(int num) {
+        Node* curr = head;
+        for(int i=30; i>=0; i--) {
+            int x = (num >> i) & 1; // i-th bit
+
+            if(!curr->isKey(x)) curr->setKey(x);
+            curr = curr->getKey(x);
+        }
+    }
+
+    int search(int num) {
+        int ans = 0;
+        Node* curr = head;
+        for(int i=30; i>=0; i--) {
+            int x = (num >> i) & 1;
+
+            int want = 1-x;
+            if(curr->isKey(want)) {
+                ans = ans | (1 << i);
+                curr = curr->getKey(want);
+            } else {
+                curr = curr->getKey(x);
+            }
+        }
+
+        return ans;
+    }
+public:
+    vector<int> maximizeXor(vector<int>& nums, vector<vector<int>>& queries) {
+        this->head = new Node();
+        sort(nums.begin(), nums.end());
+
+        for(int i=0; i<queries.size(); i++) {
+            queries[i].push_back(i); // to preserve the order of queries
+        }
+        sort(queries.begin(), queries.end(), compare);
+
+        vector<int> ans(queries.size());
+        int i=0;
+
+        for(auto q: queries) {
+            
+            while(i < nums.size() && nums[i] <= q[1]) {
+                insert(nums[i]);
+                i++;
+            }
+
+            if(i==0) ans[q[2]] = -1; // If no elements less than q[1]
+            else ans[q[2]] = search(q[0]);
+        }
+
+        return ans;
+    }
+};
+```
+
+
