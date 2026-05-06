@@ -1058,4 +1058,124 @@ public:
 };
 ```
 
+---
 
+## 8. Prefix and Suffix Search
+[Leetcode link](https://leetcode.com/problems/prefix-and-suffix-search/description/)
+
+Design a special dictionary that searches the words in it by a prefix and a suffix.
+
+Implement the WordFilter class:
+
+WordFilter(string[] words) Initializes the object with the words in the dictionary.
+
+f(string pref, string suff) Returns the index of the word in the dictionary, which has the 
+prefix pref and the suffix suff. If there is more than one valid index, return the largest of them. 
+
+If there is no such word in the dictionary, return -1.
+
+
+```
+Input
+    ["WordFilter", "f"]
+    [[["apple"]], ["a", "e"]]
+
+Output
+    [null, 0]
+
+Explanation
+    WordFilter wordFilter = new WordFilter(["apple"]);
+    wordFilter.f("a", "e"); // return 0, because the word at index 0 has prefix = "a" and suffix = "e".
+```
+
+### Intuition
+> [!IMPORTANT]
+> - This problem can be solved with two tries, prefix and suffic
+> - then search on each trie and get a list of words
+> - From both searches get the common words and return the highest index
+> - This solution will give TLE or MLE
+>
+> - Better approach is to make one trie and store:
+> - all suffix + { + word
+>
+> For example "apple"
+> 
+> store:
+> - "{apple"
+> - "e{apple"
+> - "le{apple"
+> - "ple{apple"
+> - "pple{apple"
+> - "apple{apple"
+>
+>
+>                   Now given query: pref = app and suff = le
+>                   Search for pref + { + suff = "app{le" --> exists in our trie
+>
+> - At every Node store the index of word
+> - as we insert words one by one: the higher indicies will replace the lower one
+
+```cpp
+class Node {
+    Node* links[27];
+    int idx;
+public:
+    Node() {
+        for(int i=0; i<27; i++) links[i] = NULL;
+        idx = -1;
+    }
+
+    bool isKey(char c) {return links[c-'a'] != NULL;}
+    Node* getKey(char c) {return links[c-'a'];}
+    void setKey(char c) {links[c-'a'] = new Node();}
+    int getIdx() {return idx;}
+    void setIdx(int i) {idx = i;}
+};
+
+class WordFilter {
+    Node* head;
+public:
+    void insert(string word, int idx) {
+        Node* curr = head;
+        for(char c: word) {
+            if(!curr->isKey(c)) curr->setKey(c);
+            curr = curr->getKey(c);
+            curr->setIdx(idx);
+        }
+    }
+
+    int search(string &s) {
+        Node* curr = head;
+        for(char c: s) {
+            if(!curr->isKey(c)) return -1;
+            curr = curr->getKey(c);
+        }
+        return curr->getIdx();
+    }
+
+    WordFilter(vector<string>& words) {
+        head = new Node();
+
+        for(int i=0; i<words.size(); i++) {
+            insert("{"+words[i], i);
+
+            int len = 1;
+            int j = words[i].size()-1;
+            while(len <= words[i].size()) {
+                string suffix = words[i].substr(j, len);
+                
+                insert(suffix + "{" + words[i], i);
+
+                j--;
+                len++;
+            }
+        }
+    }
+    
+    int f(string pref, string suff) {
+        string s = suff + "{" + pref;
+
+        return search(s);
+    }
+};
+```
