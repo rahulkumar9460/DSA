@@ -288,9 +288,10 @@ directly connected computers, and place them between any pair of disconnected co
 >       -   If find(i) == find(j) ==> we have redundant edge
 >       -   else connComp--
 >
->           if redundantEdges < (connected_components - 1) ==> return -1 ==> not possible
 >
->           else return (connected_components - 1)
+>               if redundantEdges < (connected_components - 1) ==> return -1 ==> not possible
+>
+>               else return (connected_components - 1)
 
 ```cpp
 int makeConnected(int n, vector<vector<int>>& connections) {
