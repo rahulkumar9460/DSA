@@ -187,7 +187,7 @@ and the jth city are directly connected, and isConnected[i][j] = 0 otherwise.
 >
 > for every node get its ultimate-parent
 > 
-> Number of untimate-parents is the answer
+> Number of ultimate-parents is the answer
 
 ```cpp
 class DSU {
@@ -236,4 +236,39 @@ public:
         return st.size();
     }
 };
+```
+
+---
+
+## 2. Redundant Connection
+[Leetcode link](https://leetcode.com/problems/redundant-connection/description/)
+
+A graph started as a tree, and now there is extra one edge added which is different
+from existing edges
+
+>   return the redundant edge that can be removed and we get the tree again.
+
+### Intuition
+> [!IMPORTANT]
+> Form the DSU
+>
+> If while forming dsu, for some edge(x, y), find(x) == find(y)
+> - which means x and y are already connected
+> - and this edge is redundant
+
+```cpp
+vector<int> findRedundantConnection(vector<vector<int>>& edges) {
+    int n = edges.size();
+    DSU* dsu = new DSU(n);
+
+    for(int i=0; i<n; i++) {
+        int x = edges[i][0]-1;
+        int y = edges[i][1]-1;
+
+        if(dsu->find(x) == dsu->find(y)) return edges[i];
+        else dsu->unite(x, y);
+    }
+
+    return {};
+}
 ```
