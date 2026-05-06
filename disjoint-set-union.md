@@ -289,6 +289,7 @@ directly connected computers, and place them between any pair of disconnected co
 >       -   else connComp--
 >
 >           if redundantEdges < (connected_components - 1) ==> return -1 ==> not possible
+>
 >           else return (connected_components - 1)
 
 ```cpp
