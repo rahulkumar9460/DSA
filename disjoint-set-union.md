@@ -272,3 +272,45 @@ vector<int> findRedundantConnection(vector<vector<int>>& edges) {
     return {};
 }
 ```
+
+---
+
+## 3. Number of Operations to Make Network Connected
+[Leetcode link](https://leetcode.com/problems/number-of-operations-to-make-network-connected/description/)
+
+You are given an initial computer network connections. You can extract certain cables between two 
+directly connected computers, and place them between any pair of disconnected computers to make them directly connected.
+
+### Intuition
+> [!IMPORTANT]
+> We need (connected_components - 1) number of cabels
+>   - While forming DSU
+>       -   If find(i) == find(j) ==> we have redundant edge
+>       -   else connComp--
+>
+>           if redundantEdges < (connected_components - 1) ==> return -1 ==> not possible
+>           else return (connected_components - 1)
+
+```cpp
+int makeConnected(int n, vector<vector<int>>& connections) {
+    DSU* dsu = new DSU(n);
+
+    int connComp = n;
+    int redundantEdges = 0;
+
+    for(auto &conn: connections) {
+        int i = conn[0], j = conn[1];
+
+        if(dsu->find(i) == dsu->find(j)) redundantEdges++;
+        else {
+            dsu->unite(i, j);
+            connComp--;
+        }
+    }
+
+    int required = connComp-1;
+    if(redundantEdges < required) return -1;
+    return required;
+}
+```
+
