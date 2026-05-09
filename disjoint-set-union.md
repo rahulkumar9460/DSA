@@ -420,3 +420,67 @@ public:
     }
 };
 ```
+
+---
+
+## 5. Most Stones Removed with Same Row or Column
+[Leetcode link](https://leetcode.com/problems/most-stones-removed-with-same-row-or-column/description/)
+
+On a 2D plane, we place n stones at some integer coordinate points. Each coordinate point may have at most one stone.
+
+A stone can be removed if it shares either the same row or the same column as another stone that has not been removed.
+
+Given an array stones of length n where stones[i] = [xi, yi] represents the location of the ith stone, 
+return the largest possible number of stones that can be removed.
+
+### Intuition
+> [!IMPORTANT]
+>
+>               All stones that shares column or row, make one component
+>               In each component we can remove (k-1) stones where k is the size of component
+>
+> - We just need to make a graph and find number of stones in each component
+>
+> We are Given location of stones: [[0,0],[0,2],[1,1],[2,0],[2,2]]
+> - we need to unite indicies in above stones array
+>
+>               Have two maps -- rowMp and colMp which stores the ultimate-parent-index of a row or col
+>               for a stone at index i = (a, b) find there ultimate parent from rowMp[a] and rowMp[b]
+>               - Now unite:
+>                   - unite(i, rowMp[a])
+>                   - unite(i, colMp[b])
+
+```cpp
+int removeStones(vector<vector<int>>& stones) {
+    // stones make a connected componenet
+    // in a connected componenet of size k, we can remove k-1 stones
+    
+    int n = stones.size();
+    DSU* dsu = new DSU(n);
+
+    unordered_map<int, int> rowMp, colMp;
+    
+    for(int i=0; i<n; i++) {
+        if(rowMp.find(stones[i][0]) != rowMp.end()) {
+            int p = rowMp[stones[i][0]];
+            dsu->unite(i, p);
+        }
+
+        if(colMp.find(stones[i][1]) != colMp.end()) {
+            int p = colMp[stones[i][1]];
+            dsu->unite(i, p);
+        }
+
+        rowMp[stones[i][0]] = dsu->find(i);
+        colMp[stones[i][1]] = dsu->find(i);
+    }
+
+    unordered_set<int> comp;
+    for(int i=0; i<n; i++) comp.insert(dsu->find(i));
+
+    int ans = 0;
+    for(int c : comp) ans += dsu->size[c]-1;
+
+    return ans;
+}
+```
