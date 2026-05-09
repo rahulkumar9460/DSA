@@ -436,10 +436,10 @@ return the largest possible number of stones that can be removed.
 ### Intuition
 > [!IMPORTANT]
 >
->               All stones that shares column or row, make one component
+>               All stones that shares column or row, make one connected-component
 >               In each component we can remove (k-1) stones where k is the size of component
 >
-> - We just need to make a graph and find number of stones in each component
+> We just need to make a graph and find number of stones in each component
 >
 > We are Given location of stones: [[0,0],[0,2],[1,1],[2,0],[2,2]]
 > - we need to unite indicies in above stones array
