@@ -484,3 +484,71 @@ int removeStones(vector<vector<int>>& stones) {
     return ans;
 }
 ```
+
+--- 
+
+## 6. Smallest String With Swaps
+[Leetcode link](https://leetcode.com/problems/smallest-string-with-swaps/description/)
+
+You are given a string s, and an array of pairs of indices in the string pairs 
+where pairs[i] = [a, b] indicates 2 indices(0-indexed) of the string.
+
+> You can swap the characters at any pair of indices in the given pairs any number of times.
+> Return the lexicographically smallest string that s can be changed to after using the swaps.
+
+Input: s = "dcab", pairs = [[0,3],[1,2],[0,2]]
+Output: "abcd"
+
+Explaination: 
+- Swap s[0] and s[3], s = "bcad"
+- Swap s[0] and s[2], s = "acbd"
+- Swap s[1] and s[2], s = "abcd"
+
+### Intuition
+> [!IMPORTANT]
+> - All pairs that shares index can become connected component
+> - For Example (0, 1), (1, 3)
+> - 0 can be swapped with 1 and 1 can be swapped with 3
+> - so (0, 1, 3) can be swapped with each other 
+>
+> so we can become greedy and sort all the charecters in given component
+> 
+>                   Group together all pairs that shares same index
+>                   For each components get all indicies in sorted order (a, b, c, d, ...)
+>                   get all chars at thoses indicies in sorted order
+>                   Assign smallest character to smallest index and so on
+>                   Keep doing it for all components
+
+```cpp
+string smallestStringWithSwaps(string s, vector<vector<int>>& pairs) {
+    int n = pairs.size();
+    DSU dsu(n);
+
+    unordered_map<int, int> mp;
+    for(int i=0; i<n; i++) {
+        if(mp.count(pairs[i][0])) dsu.unite(i, mp[pairs[i][0]]);
+        if(mp.count(pairs[i][1])) dsu.unite(i, mp[pairs[i][1]]);
+
+        mp[pairs[i][0]] = dsu.find(i);
+        mp[pairs[i][1]] = dsu.find(i);
+    }
+
+    unordered_map<int, set<int>> comps; // find all indicies in each components in sorted order
+    for(int i=0; i<n; i++) {
+        int p = dsu.find(i);
+        comps[p].insert(pairs[i][0]);
+        comps[p].insert(pairs[i][1]);
+    }
+
+    for(auto &[idx, comp] : comps) {
+        vector<char> v;
+        for(int i: comp) v.push_back(s[i]); // find all characters at each indicies in components
+        sort(v.begin(), v.end()); // sort the characters
+
+        int j = 0;
+        for(int i: comp) s[i] = v[j++];
+    }
+
+    return s;
+}
+```
