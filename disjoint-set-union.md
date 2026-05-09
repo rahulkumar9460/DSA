@@ -316,3 +316,107 @@ int makeConnected(int n, vector<vector<int>>& connections) {
 }
 ```
 
+---
+
+## 4. Accounts Merge
+[Leetcode link](https://leetcode.com/problems/accounts-merge/description/)
+Given a list of accounts where each element accounts[i] is a list of strings, where the first element 
+accounts[i][0] is a name, and the rest of the elements are emails representing emails of the account.
+
+Now, we would like to merge these accounts. Two accounts definitely belong to the same person if there 
+is some common email to both accounts. Note that even if two accounts have the same name, they may belong 
+to different people as people could have the same name. A person can have any number of accounts initially, 
+but all of their accounts definitely have the same name.
+
+Input: accounts = 
+[
+    ["John","johnsmith@mail.com","john_newyork@mail.com"],
+    ["John","johnsmith@mail.com","john00@mail.com"],
+    ["Mary","mary@mail.com"],
+    ["John","johnnybravo@mail.com"]
+]
+
+Output: 
+[
+    ["John","john00@mail.com","john_newyork@mail.com","johnsmith@mail.com"],
+    ["Mary","mary@mail.com"],["John","johnnybravo@mail.com"]
+]
+
+### Intuition
+> [!IMPORTANT]
+> We need to unite indicies that have common emails
+>
+> Use DSU to unite the indicies
+>
+> maintain a map<email, ultimate_parent_index> ulp
+>
+>               IF a email 'e' is already seen in ulp map that means mp['e'] and current index need to be united
+
+```cpp
+class DSU {
+public:
+    vector<int> parent, size;
+    DSU(int n) {
+        parent.resize(n);
+        size.resize(n, 1);
+        for(int i=0; i<n; i++) parent[i] = i;
+    }
+
+    int find(int x) {
+        if(parent[x] == x)return x;
+        return parent[x] = find(parent[x]);
+    }
+
+    void unite(int a, int b) {
+        a = find(a);
+        b = find(b);
+        if(a == b) return;
+
+        if(size[a] < size[b]) swap(a, b);
+        parent[b] = a;
+        size[a] += size[b];
+    }
+};
+
+class Solution {
+public:
+    vector<vector<string>> accountsMerge(vector<vector<string>>& accounts) {
+        int n = accounts.size();
+        DSU* dsu = new DSU(n);
+
+        unordered_map<string, int> ulp; // stores the parent index for email
+
+        for(int i=0; i<accounts.size(); i++) {
+            for(int j=1; j<accounts[i].size(); j++) {
+                if(ulp.find(accounts[i][j]) != ulp.end()) { // email is already seen
+                    int p = ulp[accounts[i][j]];
+                    dsu->unite(p, i); // unite current account and parent account
+                }
+            }
+
+            for(int j=1; j<accounts[i].size(); j++) {
+                ulp[accounts[i][j]] = dsu->find(i); // insert emails in map
+            }
+        }
+
+        unordered_map<int, set<string>> mp;
+        for(int i=0; i<n; i++) {
+            int p = dsu->find(i);
+            for(int j=1; j<accounts[i].size(); j++)
+                mp[p].insert(accounts[i][j]);
+        }
+
+        vector<vector<string>> ans;
+        for(auto &[idx, emails] : mp) {
+            string name = accounts[idx][0];
+            vector<string> v;
+            v.push_back(name);
+
+            for(string email : emails) v.push_back(email);
+            ans.push_back(v);
+        }
+
+        return ans;
+    }
+};
+```
