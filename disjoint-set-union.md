@@ -871,3 +871,65 @@ int maxNumEdgesToRemove(int n, vector<vector<int>>& edges) {
 
 ## 11. Find Critical and Pseudo-Critical Edges in Minimum Spanning Tree
 [Leetcode link](https://leetcode.com/problems/find-critical-and-pseudo-critical-edges-in-minimum-spanning-tree/description/)
+
+
+---
+
+## 12. Largest Component Size by Common Factor
+[Leetcode link](https://leetcode.com/problems/largest-component-size-by-common-factor/description/)
+
+You are given an integer array of unique positive integers nums. Consider the following graph:
+
+> There are nums.length nodes, labeled nums[0] to nums[nums.length - 1],
+> There is an undirected edge between nums[i] and nums[j] if nums[i] and nums[j] share a common factor greater than 1.
+> Return the size of the largest connected component in the graph.
+
+### Intuition
+> [!IMPORTANT]
+> Two pairs have common factor if their gcd is > 1
+>
+> If we find gcd for all pairs, this solution will give TLE
+>
+> Instead compute all prime-fators for all numbers
+> - and store <prime-factor, index> into a map
+> - This next time if we see same prime factor then get it's parent index from map and unite them
+
+```cpp
+vector<int> primeFactors(int n) {
+    vector<int> ans;
+
+    for(int x=2; x*x<=n; x++) {
+        if(n%x == 0) {
+            ans.push_back(x);
+
+            while(n%x == 0) n = n/x;
+        }
+    }
+    if(n>1) ans.push_back(n); // important, DON't FORGET
+
+    return ans;
+}
+
+int largestComponentSize(vector<int>& nums) {
+    int n = nums.size();
+    DSU dsu(n);
+    unordered_map<int, int> parent;
+
+    for(int i=0; i<n; i++) {
+        vector<int> factors = primeFactors(nums[i]);
+
+        for(int &f : factors) {
+            if(parent.count(f)) dsu.unite(i, parent[f]); // unite current index and factor's parent index
+            else parent[f] = i; // else make current index as parent
+        }
+    }
+
+    int ans = 0;
+    for(int i=0; i<n; i++)
+        ans = max(ans, dsu.size[dsu.find(i)]); // get max size
+    
+    return ans;
+}
+```
+
+
