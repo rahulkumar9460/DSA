@@ -552,3 +552,75 @@ string smallestStringWithSwaps(string s, vector<vector<int>>& pairs) {
     return s;
 }
 ```
+
+---
+
+## 7. Lexicographically Smallest Equivalent String
+[Leetcode link](https://leetcode.com/problems/lexicographically-smallest-equivalent-string/description/)
+
+We say s1[i] and s2[i] are equivalent characters.
+
+For example, if s1 = "abc" and s2 = "cde", 
+> then we have 'a' == 'c', 'b' == 'd', and 'c' == 'e'.
+
+Find lexicographically smallest equivalent string of baseStr
+
+Input: 
+    s1 = "parker", s2 = "morris", baseStr = "parser"
+    
+Output: 
+    "makkek"
+
+Explanation: 
+Based on the equivalency information in s1 and s2, 
+we can group their characters as [m,p], [a,o], [k,r,s], [e,i].
+
+The characters in each group are equivalent and sorted in lexicographical order.
+- So the answer is "makkek".
+
+### Intuition
+> [!IMPORTANT]
+> We need to unite characters from strings s1 and s2 at the same indicies
+>  - But need to make sure we have smallest characters as the parent
+>  - Now for each char of baseStr just do 
+>
+>                   baseStr[i] = dsu->find(baseStr[i])
+
+```cpp
+class DSU {
+public:
+    unordered_map<char, char> parent;
+    DSU() {
+        for(char c='a'; c<='z'; c++) {
+            parent[c] = c;
+        }
+    }
+
+    char find(char x) {
+        if(parent[x] == x) return x;
+        return parent[x] = find(parent[x]);
+    }
+
+    void unite(char a, char b) {
+        a = find(a);
+        b = find(b);
+        if(a == b)return;
+
+        if(a > b) swap(a, b); // Keep the smallest char as parent
+        parent[b] = a;
+    }
+};
+class Solution {
+public:
+    string smallestEquivalentString(string s1, string s2, string baseStr) {
+        DSU dsu;
+
+        int n = s1.size(), m = baseStr.size();
+        for(int i=0; i<n; i++) dsu.unite(s1[i], s2[i]);
+
+        for(int i=0; i<m; i++) baseStr[i] = dsu.find(baseStr[i]); // find smallest equivalent character
+
+        return baseStr;
+    }
+};
+```
