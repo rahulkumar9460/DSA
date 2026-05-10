@@ -628,3 +628,65 @@ public:
     }
 };
 ```
+
+---
+
+## 8. Satisfiability of Equality Equations
+[Leetcode link](https://leetcode.com/problems/satisfiability-of-equality-equations/description/)
+
+You are given an array of strings equations that represent relationships between variables where
+each string equations[i] is of length 4 and takes one of two different forms: 
+> "xi==yi" or "xi!=yi".
+> Here, xi and yi are lowercase letters (not necessarily different) that represent one-letter variable names.
+> 
+> Return true if it is possible to assign integers to variable names so as to satisfy all the given equations, or false otherwise.
+
+ 
+Input: 
+- equations = ["a==b","b!=a"]
+
+Output: 
+- false
+
+> Explanation: If we assign say, a = 1 and b = 1, then the first equation is satisfied, but not the second.
+>
+> There is no way to assign the variables to satisfy both equations.
+
+### Intuition
+> [!IMPORTANT]
+> Equations containing '==' belongs to same component
+>
+> Elemenets present in '!=" equation must not be in same conponent
+>
+>               First make componenet with all '==' equation
+>               Now for all '!=' equations check elements are not in same component
+>
+
+```cpp
+bool equationsPossible(vector<string>& equations) {
+    DSU dsu;
+
+    // First pass: all == equations
+    for(string & eq: equations) {
+        int a = eq[0] - 'a';
+        int b = eq[3] - 'a';
+
+        if(eq[1] == '=') {
+            dsu.unite(a, b); // unite them into same component
+        }
+    }
+
+    // Second pass: all != equations
+    for(string &eq : equations) {
+        int a = eq[0] - 'a';
+        int b = eq[3] - 'a';
+
+        if(eq[1] == '!') {
+            if(dsu.find(a) == dsu.find(b)) // a and b must not be in same component
+                return false;
+        }
+    }
+    
+    return true;
+}
+```
