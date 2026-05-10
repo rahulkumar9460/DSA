@@ -866,3 +866,8 @@ int maxNumEdgesToRemove(int n, vector<vector<int>>& edges) {
     return redundantEdges + redundantEdges1 + redundantEdges2;
 }
 ```
+
+---
+
+## 11. Find Critical and Pseudo-Critical Edges in Minimum Spanning Tree
+[Leetcode link](https://leetcode.com/problems/find-critical-and-pseudo-critical-edges-in-minimum-spanning-tree/description/)
