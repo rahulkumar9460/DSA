@@ -569,14 +569,15 @@ For example, if s1 = "abc" and s2 = "cde",
 
 ```
 Input: 
-    s1 = "parker", s2 = "morris", baseStr = "parser"
+-   s1 = "parker", s2 = "morris", baseStr = "parser"
     
 Output: 
-    "makkek"
+-   "makkek"
 
 Explanation: 
-Based on the equivalency information in s1 and s2, 
-we can group their characters as [m,p], [a,o], [k,r,s], [e,i].
+> Based on the equivalency information in s1 and s2, 
+>
+> we can group their characters as [m,p], [a,o], [k,r,s], [e,i].
 
 The characters in each group are equivalent and sorted in lexicographical order.
 - So the answer is "makkek".
