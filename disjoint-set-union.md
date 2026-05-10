@@ -562,9 +562,12 @@ We say s1[i] and s2[i] are equivalent characters.
 
 For example, if s1 = "abc" and s2 = "cde", 
 > then we have 'a' == 'c', 'b' == 'd', and 'c' == 'e'.
+>
+> Find lexicographically smallest equivalent string of baseStr
 
-Find lexicographically smallest equivalent string of baseStr
+```
 
+```
 Input: 
     s1 = "parker", s2 = "morris", baseStr = "parser"
     
