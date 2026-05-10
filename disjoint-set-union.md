@@ -932,4 +932,74 @@ int largestComponentSize(vector<int>& nums) {
 }
 ```
 
+---
+
+## 13. Similar String Groups
+[Leetcode link](https://leetcode.com/problems/similar-string-groups/description/)
+
+Two strings, X and Y, are considered similar if either they are identical or we can make 
+them equivalent by swapping at most two letters (in distinct positions) within the string X.
+
+> We are given a list strs of strings where every string in strs is an anagram of every other string in strs.
+> How many groups are there?
+
+Input: 
+- strs = ["tars","rats","arts","star"]
+
+Output: 
+- 2
+
+Explanation:
+- Group1 = ["tars","rats","arts"], Group2 = ["star"]
+
+```
+Constraints:
+
+    1 <= strs.length <= 300
+    1 <= strs[i].length <= 300
+    strs[i] consists of lowercase letters only.
+    All words in strs have the same length and are anagrams of each other.
+```
+
+### Intuition
+> [!IMPORTANT]
+> Since given constraints are small: 
+> - So compare each string with every other string and see if they are similar
+> - If two strings are similar group them together using DSU data structure
+> 
+>               Finally return the number of connected components
+
+```cpp
+bool areSimilar(string &s1, string &s2) {
+    int count = 0;
+    for(int i=0; i<s1.size(); i++) {
+        if(s1[i] != s2[i]) count++;
+        if(count > 2) return false;
+    }
+
+    return true;
+}
+
+int numSimilarGroups(vector<string>& strs) {
+    int n = strs.size();
+    DSU dsu(n);
+
+    int count = n;
+    for(int i=0; i<n; i++) {
+        for(int j=i+1; j<n; j++) {
+            if(!areSimilar(strs[i], strs[j])) continue;
+
+            if(dsu.find(i) == dsu.find(j)) continue;
+            else {
+                dsu.unite(i, j);
+                count--;
+            }
+        }
+    }
+
+    return count;
+}
+```
+
+
 
