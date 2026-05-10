@@ -791,3 +791,78 @@ vector<int> numOfIslands(int n, int m, vector<vector<int>> &operations){
     return ans;
 }
 ```
+
+---
+
+## 10. Remove Max Number of Edges to Keep Graph Fully Traversable
+[Leetcode link](https://leetcode.com/problems/remove-max-number-of-edges-to-keep-graph-fully-traversable/description/)
+
+Alice and Bob have an undirected graph of n nodes and three types of edges:
+
+1. Type 1: Can be traversed by Alice only.
+2. Type 2: Can be traversed by Bob only.
+3. Type 3: Can be traversed by both Alice and Bob.
+
+> Return the maximum number of edges you can remove, or return -1 if Alice and Bob cannot fully traverse the graph
+
+### Intuition
+> [!IMPORTANT]
+> Start making graph from given edges
+> 
+> First check the type3 edges if they can be removed = redundantEdges
+>
+> Now Build graph for Alice, and count the extra edges = redundantEdges1
+> - check if connected-components == 1, otherwise return -1
+>
+> Node build graph for Bob, and count extra edges = redundantEdges2
+> - check if connected-components == 1, otherwise return -1
+>
+>                       Use DSU and first traverse type-3 edges and get extra edges = redundantEdges
+>                       Clone DSU to two DSUs dsu1 and dsu2
+>                       Get redundant edges for both Alice and Bob using clone DSUs
+
+```cpp
+int helper(vector<vector<int>>& edges, DSU &dsu, int comp, int player) {
+    int count = 0;
+    for(auto &edge: edges) {
+        if(edge[0] == player) {
+            int a = edge[1]-1, b = edge[2]-1;
+            if(dsu.find(a) == dsu.find(b)) count++;
+            else {
+                dsu.unite(a, b);
+                comp--;
+            }
+        }
+    }
+
+    if(comp != 1) return -1;
+    return count;
+}
+
+int maxNumEdgesToRemove(int n, vector<vector<int>>& edges) {
+    DSU dsu(n);
+
+    int comp = n;
+    int redundantEdges = 0;
+    for(auto &edge : edges) {
+        if(edge[0] == 3) {
+            int a = edge[1]-1, b = edge[2]-1;
+            if(dsu.find(a) == dsu.find(b)) redundantEdges++;
+            else {
+                dsu.unite(a, b);
+                comp--;
+            }
+        }
+    }
+
+    DSU dsu1 = dsu;
+    int redundantEdges1 = helper(edges, dsu1, comp, 1);
+    if(redundantEdges1 == -1) return -1;
+
+    DSU dsu2 = dsu;
+    int redundantEdges2 = helper(edges, dsu2, comp, 2);
+    if(redundantEdges2 == -1) return -1;
+
+    return redundantEdges + redundantEdges1 + redundantEdges2;
+}
+```
