@@ -118,6 +118,31 @@ vector<int> nextGreaterElement(vector<int>& nums1, vector<int>& nums2) {
 }
 ```
 
+---
+
+## 3. Next Greater Element II
+[Leetcode link](https://leetcode.com/problems/next-greater-element-ii/description/)
+
+> Given a circular integer array nums (i.e., the next element of nums[nums.length - 1] is nums[0]), 
+> return the next greater number for every element in nums.
+
+The next greater number of a number x is the first greater number to its traversing-order next in the array
+
+Example;
+Input: nums = [1,2,3,4,3]
+Output: [2,3,4,-1,4]
+
+### Intuition
+> [!IMPORTANT]
+> [1,2,3,4,3] ==> circular form will be 1,2,3,4,3 - 1,2,3,4
+>
+> Now consider the combined array for making the monotonic decreasing stack
+>
+>                   First traverse from n-2 to 0 and build stack
+>                   Now again traverse from n-1 to 0 and build stack and update answer
+
+
+
 
 
 ---
