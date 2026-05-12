@@ -1038,7 +1038,7 @@ only ones directly connected. The result of each query:
 > - We might miss higher valid common factor(might not be prime factor) which is greater than Threshold
 > - Example
 >   
->                   9 and 18, threshold is 5
+>                   Given: 30 and 18, threshold is 5
 >                   30 and 18 share common prime factor 2, 3 but since it is less than threshold
 >                       we do not consider it 
 >                       And we dont create a Edge between them
