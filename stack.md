@@ -30,30 +30,30 @@ for(int i=0;i<n;i++){
 ```
 
 ## Problems
-LeetCode 739 Daily Temperatures
-LeetCode 496 Next Greater Element I
-LeetCode 503 Next Greater Element II
-LeetCode 901 Online Stock Span
-LeetCode 84 Largest Rectangle in Histogram
-LeetCode 907 Sum of Subarray Minimums
+1. LeetCode 739 Daily Temperatures
+2. LeetCode 496 Next Greater Element I
+3. LeetCode 503 Next Greater Element II
+4. LeetCode 901 Online Stock Span
+5. LeetCode 84 Largest Rectangle in Histogram
+6. LeetCode 907 Sum of Subarray Minimums
 
 ---
 
 # 2. Parentheses / Matching
 
 ## Problems
-LeetCode 20 Valid Parentheses
-LeetCode 32 Longest Valid Parentheses
-LeetCode 1249 Minimum Remove to Make Valid Parentheses
+1. LeetCode 20 Valid Parentheses
+2. LeetCode 32 Longest Valid Parentheses
+3. LeetCode 1249 Minimum Remove to Make Valid Parentheses
 
 ---
 
 # 3. Expression Evaluation
 
 ## Problems
-LeetCode 150 Evaluate Reverse Polish Notation
-LeetCode 224 Basic Calculator
-LeetCode 227 Basic Calculator II
+1. LeetCode 150 Evaluate Reverse Polish Notation
+2. LeetCode 224 Basic Calculator
+3. LeetCode 227 Basic Calculator II
 
 
 ---
@@ -61,9 +61,9 @@ LeetCode 227 Basic Calculator II
 # 4. Design Stack
 
 ## Problems
-LeetCode 155 Min Stack
-LeetCode 716 Max Stack
-LeetCode 232 Implement Queue using Stacks
+1. LeetCode 155 Min Stack
+2. LeetCode 716 Max Stack
+3. LeetCode 232 Implement Queue using Stacks
 
 
 ---
@@ -72,7 +72,7 @@ LeetCode 232 Implement Queue using Stacks
 # 5. Greedy + Stack
 
 ## Problems
-LeetCode Remove K Digits
+1. LeetCode Remove K Digits
 
 
 ---
@@ -80,6 +80,6 @@ LeetCode Remove K Digits
 # 6. Simulation + Stack
 
 ## Problems
-LeetCode Asteroid Collision
-LeetCode Exclusive Time of Functions
-LeetCode Car Fleet
+1. LeetCode Asteroid Collision
+2. LeetCode Exclusive Time of Functions
+3. LeetCode Car Fleet
