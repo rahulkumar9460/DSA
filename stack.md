@@ -166,6 +166,57 @@ vector<int> nextGreaterElements(vector<int>& nums) {
 }
 ```
 
+---
+
+## 4. Online Stock Span
+[Leetcode link](https://leetcode.com/problems/online-stock-span/description/)
+
+Span of stock at day i is number of days it has been lesser or equal to current price 
+
+Example:
+
+- ["StockSpanner", "next", "next", "next", "next", "next", "next", "next"]
+- [[], [100], [80], [60], [70], [60], [75], [85]]
+
+Output:
+- [null, 1, 1, 1, 2, 1, 4, 6]
+
+### Intuition
+> [!IMPORTANT]
+> To count days where is has been lesser of equal to current price
+>
+>               We need to find the nearest greater to left = day
+>
+>               answer = currDay - day
+>
+>
+> - monotonic decreasing stack
+
+```cpp
+class StockSpanner {
+public:
+    stack<pair<int, int>> st;
+    int day;
+    StockSpanner() {
+        day = 0;
+    }
+    
+    int next(int price) {
+        // nearest greater to left
+        while(!st.empty() && st.top().first <= price) st.pop();
+
+        int ans = 1;
+        if(st.empty()) ans = day+1;
+        else ans = day-st.top().second;
+
+        st.push({price, day});
+        day++;
+
+        return ans;
+    }
+};
+```
+
 
 ---
 
