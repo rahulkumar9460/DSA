@@ -1001,5 +1001,75 @@ int numSimilarGroups(vector<string>& strs) {
 }
 ```
 
+---
 
+## 14. Graph Connectivity With Threshold
+[Leetcode link](https://leetcode.com/problems/graph-connectivity-with-threshold/description/)
+
+Two numbers are connected if they share a common factor > Threshold
+
+Given list of queries(a, b), return true if a and b are connected
+
+Input: 
+- n = 6, threshold = 2, queries = [[1,4],[2,5],[3,6]]
+
+Output: 
+- [false,false,true]
+
+Explanation: 
+- The divisors for each number:
+        1:   1
+        2:   1, 2
+        3:   1, 3
+        4:   1, 2, 4
+        5:   1, 5
+        6:   1, 2, 3, 6
+
+Using the underlined divisors above the threshold, only cities 3 and 6 share a common divisor, so they are the
+only ones directly connected. The result of each query:
+
+- [1,4]   1 is not connected to 4
+- [2,5]   2 is not connected to 5
+- [3,6]   3 is connected to 6 through path 3--6
+
+### Intuition
+> [!IMPORTANT]
+> If we try to solve it by using all prime factors and see if two numbers share common prime factors
+> - We might miss higher valid common factor(might not be prime factor) which is greater than Threshold
+> - Example
+>   
+>                   9 and 18, threshold is 5
+>                   30 and 18 share common prime factor 2, 3 but since it is less than threshold
+>                       we do not consider it 
+>                       And we dont create a Edge between them
+>
+>                   But they share 6 as common factor > threshold
+>                   So there must be a edge between them
+>
+> - instead of using prime factors
+>                   Unite d and all multiple of d's (2d, 3d, 4d, 5d....) together
+>                   Keep doing it for all (threshold < d <= n)
+
+
+```cpp
+vector<bool> areConnected(int n, int threshold, vector<vector<int>>& queries) {
+    DSU dsu(n);
+    unordered_map<int, int> parent;
+
+    for(int d=threshold+1; d<=n; d++) {
+        // get multiple of d => 2d, 3d, 4d, 5d
+        for(int i=2; i*d<=n; i++) {
+            int multiple = i*d;
+            dsu.unite(d-1, multiple-1);
+        }
+    }
+    
+    vector<bool> ans;
+    for(auto &q : queries) {
+        ans.push_back(dsu.find(q[0]-1) == dsu.find(q[1]-1));
+    }
+
+    return ans;
+}
+```
 
