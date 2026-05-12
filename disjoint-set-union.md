@@ -1047,6 +1047,7 @@ only ones directly connected. The result of each query:
 >                   So there must be a edge between them
 >
 > - instead of using prime factors
+>
 >                   Unite d and all multiple of d's (2d, 3d, 4d, 5d....) together
 >                   Keep doing it for all (threshold < d <= n)
 
