@@ -72,6 +72,7 @@ vector<int> dailyTemperatures(vector<int>& temperatures) {
 }
 ```
 
+
 ---
 
 ## 2. Next Greater Element I
@@ -217,6 +218,81 @@ public:
 };
 ```
 
+---
+
+## 5.  Largest Rectangle in Histogram
+[Leetcode link](https://leetcode.com/problems/largest-rectangle-in-histogram/description/)
+
+> Given an array of integers heights representing the histogram's bar height where 
+> the width of each bar is 1, return the area of the largest rectangle in the histogram
+
+Input: 
+- heights = [2,1,5,6,2,3]
+Output: 
+- 10
+
+Explanation: 
+- The above is a histogram where width of each bar is 1.
+- The largest rectangle is shown in the red area, which has an area = 10 units.
+
+```
+
+         | |   
+      | || |   
+      | || |   
+      | || |   | |
+| |   | || || || |
+| || || || || || |
+ 2. 1  5. 6. 2. 3
+```
+
+### Intuition
+> [!IMPORTANT]
+> For each histogram we need to check on left and right how far we can maintain its height
+>
+> We need nearest-smaller-to-left and nearest-smaeer-to-right
+>
+>                   then for ith histogram, area = (nsr[i] - nsl[i] - 1) * heights[i]
+>
+>                   For above Example:
+>                   nsr = [1, 6, 4, 4, 6, 6]
+>                   nsl = [-1, -1, 1, 2, 1, 4]
+>                   nsr-nsl-1 = [1, 6, 2, 1, 4, 1]
+>                   area = [2, 6, 10, 6, 8, 3]
+>                   Max Areas = 10
+
+```cpp
+int largestRectangleArea(vector<int>& heights) {
+    int n = heights.size();
+    int ans = 0;
+
+    stack<int> st;
+    // Nearest smaller to right
+    vector<int> nsr(n, n);
+    for(int i=n-1; i>=0; i--) {
+        while(!st.empty() && heights[st.top()] >= heights[i]) st.pop();
+        
+        if(!st.empty()) nsr[i] = st.top();
+        st.push(i);
+    }
+
+    while(!st.empty()) st.pop();
+    // Nearest smaller to left
+    vector<int> nsl(n, -1);
+    for(int i=0; i<n; i++) {
+        while(!st.empty() && heights[st.top()] >= heights[i]) st.pop();
+        
+        if(!st.empty()) nsl[i] = st.top();
+        st.push(i);
+    }
+
+    for(int i=0; i<n; i++) {
+        ans = max(ans, (nsr[i]-nsl[i]-1)*heights[i]);
+    }
+
+    return ans;
+}
+```
 
 ---
 
