@@ -128,9 +128,11 @@ vector<int> nextGreaterElement(vector<int>& nums1, vector<int>& nums2) {
 
 The next greater number of a number x is the first greater number to its traversing-order next in the array
 
-Example;
-Input: nums = [1,2,3,4,3]
-Output: [2,3,4,-1,4]
+Example:
+
+Input: 
+- nums = [1,2,3,4,3]
+- Output: [2,3,4,-1,4]
 
 ### Intuition
 > [!IMPORTANT]
