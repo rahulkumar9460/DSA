@@ -37,6 +37,89 @@ for(int i=0;i<n;i++){
 5. LeetCode 84 Largest Rectangle in Histogram
 6. LeetCode 907 Sum of Subarray Minimums
 
+## 1. Daily Temperatures
+[Leetcode link](https://leetcode.com/problems/daily-temperatures/description/)
+
+Given an array of integers temperatures represents the daily temperatures, 
+return an array answer such that answer[i] is the number of days you have to wait after the 
+ith day to get a warmer temperature. If there is no future day for which this is possible, 
+keep answer[i] == 0 instead.
+
+Example: 
+Input: temperatures = [73,74,75,71,69,72,76,73]
+Output: [1,1,4,2,1,1,0,0]
+
+### Intuition
+> [!IMPORTANT]
+> - We need nearest greater to right element 
+
+
+```cpp
+vector<int> dailyTemperatures(vector<int>& temperatures) {
+    // next greater to right
+    int n = temperatures.size();
+    stack<int> st;
+    vector<int> ans(n, 0);
+
+    for(int i=n-1; i>=0; i--) {
+        while(!st.empty() && temperatures[st.top()] <= temperatures[i]) st.pop();
+
+        if(!st.empty()) ans[i] = st.top()-i;
+        st.push(i);
+    }
+
+    return ans;
+}
+```
+
+---
+
+## 2. Next Greater Element I
+[Leetcode link](https://leetcode.com/problems/next-greater-element-i/description/)
+
+Given two arrays nums1 and nums2
+for each index i in nums1 find index j in nums2 such that nums1[i] == nums2[j] and then 
+- find the greater to right of nums2[j]
+
+Input: 
+- nums1 = [4,1,2], nums2 = [1,3,4,2]
+Output: 
+- [-1,3,-1]
+
+Explanation: The next greater element for each value of nums1 is as follows:
+- 4 is underlined in nums2 = [1,3,4,2]. There is no next greater element, so the answer is -1.
+- 1 is underlined in nums2 = [1,3,4,2]. The next greater element is 3.
+- 2 is underlined in nums2 = [1,3,4,2]. There is no next greater element, so the answer is -1.
+
+> [!IMPORTANT]
+> Preprocess nums2 and find next greater to right for each index and store them in map
+>
+> now for each element in nums1 just return map[nums1[i]]
+
+```cpp
+vector<int> nextGreaterElement(vector<int>& nums1, vector<int>& nums2) {
+    unordered_map<int,int> mp;
+    int n = nums1.size(), m = nums2.size();
+
+    stack<int> st;
+    for(int i=m-1; i>=0; i--) {
+        while(!st.empty() && st.top() <= nums2[i]) st.pop();
+
+        if(!st.empty()) mp[nums2[i]] = st.top();
+        else mp[nums2[i]] = -1;
+
+        st.push(nums2[i]);
+    }
+
+    vector<int> res(n);
+    for(int i=0; i<n; i++) res[i] = mp[nums1[i]];
+
+    return res;
+}
+```
+
+
+
 ---
 
 # 2. Parentheses / Matching
