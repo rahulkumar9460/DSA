@@ -563,6 +563,65 @@ string minRemoveToMakeValid(string s) {
 2. LeetCode 224 Basic Calculator
 3. LeetCode 227 Basic Calculator II
 
+## 1. Evaluate Reverse Polish Notation
+[Leetcode link](https://leetcode.com/problems/evaluate-reverse-polish-notation/description/)
+
+> You are given an array of strings tokens that represents an arithmetic expression in a Reverse Polish Notation.
+
+> Evaluate the expression. Return an integer that represents the value of the expression.
+
+Note that:
+- The valid operators are '+', '-', '*', and '/'.
+- Each operand may be an integer or another expression.
+
+Input: 
+- tokens = ["2","1","+","3","*"]
+Output: 
+- 9
+Explanation: 
+- ((2 + 1) * 3) = 9
+
+### Intuition
+> [!IMPORTANT]
+> Keep pushing integers (operands) to stack 
+>
+> When a operator is encountered pop two integers from stack and 
+> 1. Perform the operation
+> 2. push the result back to stack
+>
+> At last return st.top()
+
+```cpp
+bool isOp(string s) {
+    return s=="+" || s=="-" || s=="*" || s=="/";
+}
+
+int solve(int a, int b, string op) {
+    if(op == "+") return a+b;
+    if(op == "-") return a-b;
+    if(op == "*") return a*b;
+    if(op == "/") return a/b;
+    return 0;
+}
+
+int evalRPN(vector<string>& tokens) {
+    stack<int> st;
+    for(string &s: tokens) {
+        if(isOp(s)) {
+            int num1 = st.top();
+            st.pop();
+            int num2 = st.top();
+            st.pop();
+
+            st.push(solve(num2, num1, s));
+        } else {
+            st.push(stoi(s));
+        }
+    }
+
+    return st.top();
+}
+```
 
 ---
 
