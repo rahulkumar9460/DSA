@@ -447,7 +447,7 @@ Explanation: The longest valid parentheses substring is "()()".
 > [!IMPORTANT]
 > We need to find a continuous block of valid parentheses
 >
-> Lets use stack if we encounter '(' push it else check st.top() == '('
+> Lets use stack if we encounter '(' push it else if stack is not empty then pop 
 >
 > We need to keep track of lastInvalidIdx so that length of valid substring = i-lastValidIdx
 >
