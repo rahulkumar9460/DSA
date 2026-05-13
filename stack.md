@@ -625,6 +625,109 @@ int evalRPN(vector<string>& tokens) {
 
 ---
 
+## 2. Basic Calculator
+[Leetcode link](https://leetcode.com/problems/basic-calculator/description/)
+
+Example 1:
+
+Input: 
+- s = "1 + 1"
+Output: 
+- 2
+
+Example 2:
+
+Input: 
+- s = " 2-1 + 2 "
+Output: 
+- 3
+
+Example 3:
+
+Input: 
+- s = "(1+(4+5+2)-3)+(6+8)"
+Output: 
+- 23
+
+### Intuition
+> [!IMPORTANT]
+> Keep ans, num and sign
+> - sign is sign of num and ans is ans till current index
+>
+>               Whenever we encounter a operator do ans = ans + sign*num
+>               Since num is included in ans, now make num = 0
+>               then sign = 1 if operator is '+' or -1 if operator is '-'
+>
+>               If we encounter '(' ==> (For example 1 - (2+3-1))
+>               We need to store the ans and curr sign into stack ==> push (ans = 1, sign = -1) to stack
+>               And make ans = 0, num = 0, sign = 1 ==> fresh start for a fresh parentheses
+>
+>               If we encounter ')' (For example 1 - (2+3-1))
+>               first include num in ans ==> ans = ans + sign*num ==> ans = 4
+>               Now get prevSign and prevAns from stack ==> (prevAns = 1, prevSign = -1)
+>               ans = prevAns + prevSign*ans ==> 1 + (-1)*4 = 1-4 = -3
+>
+>               Finally return ans + sign*num
+
+```cpp
+bool isDigit(char c) {
+    return c >= '0' && c <= '9';
+}
+
+int calculate(string s) {
+    int n = s.size();
+    long ans = 0;
+    stack<long> st;
+
+    long num = 0;
+    long sign = 1;
+
+    for(char c : s) {
+        if(isDigit(c)) {
+            num = num*10 + (c-'0');
+        }
+
+        else if(c == '+') {
+            ans = ans + sign*num;
+            num = 0;
+            sign = 1;
+        }
+
+        else if(c == '-') {
+            ans = ans + sign*num;
+            num = 0;
+            sign = -1;
+        }
+
+        else if(c == '(') {
+            // save prev state: ans and sign
+            st.push(ans);
+            st.push(sign);
+
+            // start fresh for new parentheses
+            ans = 0;
+            num = 0;
+            sign = 1;
+        }
+
+        else if(c == ')') {
+            ans = ans + sign*num;
+            num = 0;
+            sign = 1;
+
+            long prevSign = st.top(); st.pop();
+            long prevAns = st.top(); st.pop();
+
+            ans = prevAns + prevSign*ans;
+        }
+    }
+
+    return ans + sign*num;
+}
+```
+
+---
+
 # 4. Design Stack
 
 ## Problems
