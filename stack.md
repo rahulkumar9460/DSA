@@ -380,6 +380,58 @@ int sumSubarrayMins(vector<int>& arr) {
 
 ---
 
+## 1. Valid Parentheses
+[Leetcode link](https://leetcode.com/problems/valid-parentheses/description/)
+
+Given a string s containing just the characters '(', ')', '{', '}', '[' and ']', determine if the input string is valid.
+
+An input string is valid if:
+
+1. Open brackets must be closed by the same type of brackets.
+2. Open brackets must be closed in the correct order.
+3. Every close bracket has a corresponding open bracket of the same type.
+
+### Intuition
+> [!IMPORTANT]
+> Use a stack to keep stack of open brackets
+>
+> when a close bracket is encounterd check the corrosponding open bracket and pop
+>
+> else return false
+>
+> finally check if stack is empty or not
+
+```cpp
+bool isOpen(char &c) {
+    return c == '(' || c == '[' || c == '{';
+}
+
+char openBracket(char &c) {
+    if(c == ')') return '(';
+    if(c == '}') return '{';
+    return '[';
+}
+
+bool isValid(string s) {
+    stack<char> st;
+
+    for(char c : s) {
+        if(isOpen(c)) st.push(c);
+        else {
+            if(st.empty()) return false;
+            if(st.top() != openBracket(c)) return false;
+
+            st.pop();
+        }
+    }
+
+    return st.empty();
+}
+```
+
+
+---
+
 # 3. Expression Evaluation
 
 ## Problems
