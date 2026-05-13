@@ -462,6 +462,7 @@ Explanation: The longest valid parentheses substring is "()()".
 >
 >
 > Example 2;
+>
 >               ))(), at start lastInvalidIdx = -1
 >               ) ==> st.pop not possible so lastInvalidIdx = 0
 >               ) ==> st.pop not possible so lastInvalidIdX = 0
