@@ -431,7 +431,7 @@ bool isValid(string s) {
 
 ---
 
-## 3.  Longest Valid Parentheses
+## 2.  Longest Valid Parentheses
 [Leetcode link](https://leetcode.com/problems/longest-valid-parentheses/description/)
 
 > Given a string containing just the characters '(' and ')', 
@@ -495,6 +495,65 @@ int longestValidParentheses(string s) {
     return ans;
 }
 ```
+
+---
+
+## 3. Minimum Remove to Make Valid Parentheses
+Given a string s of '(' , ')' and lowercase English characters.
+
+Your task is to remove the minimum number of parentheses ( '(' or ')', in any positions ) 
+so that the resulting parentheses string is valid and return any valid string.
+
+Input: 
+- s = "lee(t(c)o)de)"
+
+Output: 
+- "lee(t(c)o)de"
+
+Explanation: 
+- "lee(t(co)de)" , "lee(t(c)ode)" would also be accepted.
+
+### Intuition
+> [!IMPORTANT]
+> GREEDY works here, keep only valid parentheses and ignore the invalid one
+>
+> - Maintain aa set<int> to store valid indicies of parentheses
+>
+>                   Use stack to keep stack of '(' indicies
+>                   when we encounter ')' check if stack is not empty ==>
+>                       Then push current index i and st.top() both to a set
+
+```cpp
+string minRemoveToMakeValid(string s) {
+    stack<int> open;
+    unordered_set<int> valid;
+
+    for(int i=0; i<s.size(); i++) {
+        char c = s[i];
+
+        if(c == '(') {
+            open.push(i);
+        } else if(c == ')') {
+            if(!open.empty()) {
+                valid.insert(open.top());
+                valid.insert(i);
+
+                open.pop();
+            }
+        }
+    }
+
+    string ans = "";
+    for(int i=0; i<s.size(); i++) {
+        if(s[i] != '(' && s[i] != ')') ans += s[i];
+        
+        else if(valid.count(i)) ans += s[i];
+    }
+
+    return ans;
+}
+```
+
 ---
 
 # 3. Expression Evaluation
