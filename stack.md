@@ -296,6 +296,81 @@ int largestRectangleArea(vector<int>& heights) {
 
 ---
 
+## 6. Sum of Subarray Minimums
+[Leetcode link](https://leetcode.com/problems/sum-of-subarray-minimums/description/)
+
+> Given an array of integers arr, find the sum of min(b), where b ranges over every (contiguous) subarray of arr. 
+> Since the answer may be large, return the answer modulo 109 + 7.
+
+Input: 
+- arr = [3,1,2,4]
+Output: 
+- 17
+
+Explanation: 
+Subarrays are [3], [1], [2], [4], [3,1], [1,2], [2,4], [3,1,2], [1,2,4], [3,1,2,4]. 
+Minimums are 3, 1, 2, 4, 1, 1, 2, 1, 1, 1.
+Sum is 17.
+
+### Intuition
+> [!IMPORTANT]
+> For each element arr[i] just find how many subarrays are there which have arr[i] as minimum
+> 
+> Let call there are d subarrays that have arr[i] as minimum, so sum = arr[i]*d
+>
+> Keep doing it for all elements
+>
+> - How to find d?
+>
+> - For element arr[i], we can make boundary to its left and right till we find elements greater than arr[i]
+> - For example [1, 4, 2, 6, 0], for element 2 left boundary is [4, 2] and right boundary is [2, 6]
+> - so total subarray that have 2 as minimum are:
+>
+>                   [4, 2], [2], [2, 6], [4, 2, 6]
+>
+>                   total = 4 = length of left boundary * length of right boundary
+>
+>                   To calculate left and. right boundary we need to find NSL and NSR
+
+```cpp
+int sumSubarrayMins(vector<int>& arr) {
+    int n = arr.size();
+    int mod = 1e9+7;
+
+    stack<int> st;
+    // nearest smaller to right
+    vector<int> nsr(n, n);
+    for(int i=n-1; i>=0; i--) {
+        while(!st.empty() && arr[st.top()] > arr[i]) st.pop();
+
+        if(!st.empty()) nsr[i] = st.top();
+        st.push(i);
+    }
+
+    while(!st.empty()) st.pop();
+    // nearest smaller to left
+    vector<int> nsl(n, -1);
+    for(int i=0; i<n; i++) {
+        while(!st.empty() && arr[st.top()] >= arr[i]) st.pop();
+
+        if(!st.empty()) nsl[i] = st.top();
+        st.push(i);
+    }
+
+    long ans = 0;
+    for(int i=0; i<n; i++) {
+        long res = 1LL * (nsr[i]-i) * (i-nsl[i]) * arr[i];
+
+        ans += res;
+        ans %= mod;
+    }
+
+    return (int)ans;
+}
+```
+
+---
+
 # 2. Parentheses / Matching
 
 ## Problems
