@@ -429,7 +429,71 @@ bool isValid(string s) {
 }
 ```
 
+---
 
+## 3.  Longest Valid Parentheses
+[Leetcode link](https://leetcode.com/problems/longest-valid-parentheses/description/)
+
+> Given a string containing just the characters '(' and ')', 
+> return the length of the longest valid (well-formed) parentheses substring.
+
+Input: s = ")()())"
+
+Output: 4
+
+Explanation: The longest valid parentheses substring is "()()".
+
+### Intuition
+> [!IMPORTANT]
+> We need to find a continuous block of valid parentheses
+>
+> Lets use stack if we encounter '(' push it else check st.top() == '('
+>
+> We need to keep track of lastInvalidIdx so that length of valid substring = i-lastValidIdx
+>
+>               Example: ((()())(, at start lastInvalidIdx = -1
+>               ( ==> st.push(0)
+>               ( ==> st.push(1)
+>               ( ==> st.push(2)
+>               ) ==> st.pop() ==> (st = {0, 1}) and length = i-st.top() = 3-1 = 2
+>               ( ==> st.push(4)
+>               ) ==> st.pop() ==> (st = {0, 1}) and length = i-st.top() = 5-1 = 4
+>               ) ==> st.pop() ==> (st = {0}) and length = i-st.top() = 6-0 = 6
+>
+>
+> Example 2;
+>               ))(), at start lastInvalidIdx = -1
+>               ) ==> st.pop not possible so lastInvalidIdx = 0
+>               ) ==> st.pop not possible so lastInvalidIdX = 0
+>               ( ==> st.push(2)
+>               ) ==> st.pop() ==> (st = {}) length = i-lastInvalidIdx = 2-0 = 2
+
+```cpp
+int longestValidParentheses(string s) {
+    stack<int> open;
+    int ans = 0;
+    int lastInvalidIdx = -1;
+
+    for(int i=0; i<s.size(); i++) {
+        if(s[i] =='(') {
+            open.push(i);
+            continue;
+        }
+        
+        // ')' case
+        if(open.empty()) {
+            lastInvalidIdx = i;
+        } else {
+            open.pop(); // remove open bracket index
+
+            if(open.empty()) ans = max(ans, i-lastInvalidIdx);
+            else ans = max(ans, i-open.top());
+        }
+    }
+
+    return ans;
+}
+```
 ---
 
 # 3. Expression Evaluation
