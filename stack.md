@@ -465,9 +465,9 @@ Explanation: The longest valid parentheses substring is "()()".
 >
 >               ))(), at start lastInvalidIdx = -1
 >               ) ==> st.pop not possible so lastInvalidIdx = 0
->               ) ==> st.pop not possible so lastInvalidIdX = 0
+>               ) ==> st.pop not possible so lastInvalidIdX = 1
 >               ( ==> st.push(2)
->               ) ==> st.pop() ==> (st = {}) length = i-lastInvalidIdx = 2-0 = 2
+>               ) ==> st.pop() ==> (st = {}) length = i-lastInvalidIdx = 3-1 = 2
 
 ```cpp
 int longestValidParentheses(string s) {
