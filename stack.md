@@ -984,3 +984,59 @@ vector<int> asteroidCollision(vector<int>& asteroids) {
     return ans;
 }
 ```
+
+---
+
+## 2. Exclusive Time of Functions
+[Leetcode link](https://leetcode.com/problems/exclusive-time-of-functions/description/)
+
+> [!IMPORTANT]
+> Maintain a stack of active functions
+>
+> If a function starts, update the time for previous function present at top
+>
+> If function ends, update time for this funtion and pop
+
+```cpp
+vector<int> parse(string &s) {
+    int idx1 = -1, idx2 = -1;
+    for(int i=0; i<s.size(); i++) {
+        if(s[i] == ':') {
+            if (idx1 == -1) idx1 = i;
+            else idx2 = i;
+        }
+    }
+
+    int id = stoi(s.substr(0, idx1));
+    int time = stoi(s.substr(idx2+1));
+
+    return {s[idx1+1] == 's', id, time};
+}
+
+vector<int> exclusiveTime(int n, vector<string>& logs) {
+    vector<int> ans(n, 0);
+    stack<int> st; // stores id's of functions
+
+    int prevTime = -1;
+    for(string &log: logs) {
+        vector<int> v = parse(log);
+        bool isStart = v[0];
+        int currId = v[1], currTime = v[2];
+
+        if(isStart) {
+            // check what is running 
+            if(!st.empty()) ans[st.top()] += currTime-prevTime;
+            
+            st.push(currId);
+            prevTime = currTime;
+        } else {
+            // task ended, it must be at the top
+            ans[st.top()] += currTime-prevTime+1;
+            st.pop();
+            prevTime = currTime+1;
+        }
+    }
+
+    return ans;
+}
+```
