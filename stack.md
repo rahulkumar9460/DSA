@@ -728,6 +728,110 @@ int calculate(string s) {
 
 ---
 
+## 3. Basic Calculator II
+[Leetcode link](https://leetcode.com/problems/basic-calculator-ii/description/)
+
+Example 1:
+Input: 
+- s = "3+2*2"
+Output: 
+- 7
+
+Example 2:
+Input: 
+- s = " 3/2 "
+Output: 
+- 1
+
+Example 3:
+Input: 
+- s = " 3+5 / 2 "
+Output: 
+- 5
+
+### Intuition
+> [!IMPORTANT] 
+> Now we have '*' and '-' as well
+> - So If we compute '+' or '-' before '*' or '/' we will get incorrect answer
+> - So when operator is '+' or '-' just store the nums in the stack along with their sign '+' or '-'
+> - and when operator is '*' or '-', pop element from stack and perform '*' or '/' and push it back to stack
+> - finally sum over all elements of stack
+>               
+>                   Example: 3-2*2
+>                   initially num = 0, prevOperator = '+', stack = {}
+>
+>                   At i == 0 ==> isDigit(3) ==> num = 3
+
+>                   At i == 1 ==> isOp(-) ==> since preOperator is '+' ==> st.push(1*num) ==> s = {+3, }
+>                           and prevOperator = '-', num = 0
+
+>                   At i = 2 ==> isDigit(2) ==> num = 2
+>
+>                   At i == 3 ==> isOp(*) ==> since prevOperator is '-' ==> st.push(-1*num) ==> s = {+3, -2}
+>                           and prevOperator = '*', num = 0
+>
+>                   At i == 4 ==> isDigit(2) ==> num = 2
+>                       since it is end of string
+>                       prevOperator = '*' ==> prevNum = st.top() = -2 ==> st.pop() ==> st = {+3}
+>                       st.push(prevNum*num) ==> st.push(-2*2) ==> st = {+3, -4}
+>
+>                   Sum of all elements in stack == +3 + (-4) = -1
+
+```cpp
+bool isDigit(char c) {
+    return c >= '0' && c <= '9';
+}
+
+bool isOp(char c) {
+    return c=='+' || c=='-' || c=='*' || c=='/';
+}
+
+int calculate(string s) {
+    stack<int> st;
+
+    int num = 0;
+    char prevOperator = '+'; // sign before num
+
+    for(int i=0; i<s.size(); i++) {
+        char c = s[i];
+
+        if(isDigit(c)) {
+            num = num*10 + (c-'0');
+        }
+
+        if(isOp(c) || i == s.size()-1) {
+            if(prevOperator == '+') st.push(num);
+
+            else if(prevOperator == '-') st.push(-num);
+
+            else if(prevOperator == '*') {
+                int prevNum = st.top(); st.pop();
+                st.push(prevNum*num);
+            }
+
+            else if(prevOperator == '/') {
+                int prevNum = st.top(); st.pop();
+                st.push(prevNum/num);
+            }
+
+            num = 0;
+            prevOperator = c;
+        }
+    }
+
+    int ans = 0;
+    while(!st.empty()) {
+        ans += st.top();
+        st.pop();
+    }
+
+    return ans;
+}
+```
+
+
+---
+
 # 4. Design Stack
 
 ## Problems
