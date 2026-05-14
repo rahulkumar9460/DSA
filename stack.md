@@ -847,7 +847,66 @@ int calculate(string s) {
 
 ## Problems
 1. LeetCode Remove K Digits
+[Leetcode link](https://leetcode.com/problems/remove-k-digits/description/)
 
+> Given string num representing a non-negative integer num, and an integer k, 
+> return the smallest possible integer after removing k digits from num.
+
+
+Example 1:
+- Input: num = "1432219", k = 3
+- Output: "1219"
+
+Example 2:
+- Input: num = "10200", k = 1
+- Output: "200"
+
+Example 3:
+- Input: num = "10", k = 2
+- Output: "0"
+
+> [!IMPORTANT]
+>  We need to build monotonic increasing stack
+>
+> - Keep pushing elements into stack
+> - if st.top() > num[i] ==> st.pop() and k--
+>
+> - Now construct string from stack and remove leading zeros
+
+```cpp
+string removeKdigits(string num, int k) {
+    stack<char> st;
+
+    for(char c : num) {
+        
+        while(!st.empty() && k > 0 && st.top() > c) {
+            st.pop();
+            k--;
+        }
+        st.push(c);
+    }
+
+    while(k > 0 && !st.empty()) {
+        st.pop();
+        k--;
+    }
+
+    string ans = "";
+    while(!st.empty()) {
+        ans.push_back(st.top());
+        st.pop();
+    }
+
+    reverse(ans.begin(), ans.end());
+
+    // remove leading zeros
+    int zeroLen = 0;
+    while(zeroLen < ans.size() && ans[zeroLen] == '0')zeroLen++;
+
+    if(zeroLen == ans.size()) return "0";
+    return ans.substr(zeroLen);
+}
+```
 
 ---
 
