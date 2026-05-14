@@ -1040,3 +1040,69 @@ vector<int> exclusiveTime(int n, vector<string>& logs) {
     return ans;
 }
 ```
+
+---
+
+## 3. Car Fleet
+[Leetcode link](https://leetcode.com/problems/car-fleet/description/)
+
+A car cannot pass another car, but it can catch up and then travel next to it at the speed of the slower car.
+
+A car fleet is a single car or a group of cars driving next to each other. The speed of the car fleet is the minimum speed of any car in the fleet.
+
+> If a car catches up to a car fleet at the mile target, it will still be considered as part of the car fleet.
+> Return the number of car fleets that will arrive at the destination.
+
+### Intuition
+> [!IMPORTANT]
+> Car B which is behind car A can catch up catch car A 
+>
+>                   if time taken by car B is less than car A (time-B <= time-A)
+>                   if its true then car B joins fleet of car A
+>
+>                   Otherwise the car B makes another fleet (time-B > time-A)
+>
+> Example: positions = [10,8,0,5,3], speed = [2,4,1,1,3], target = 12
+>
+>                   cars = [{10, 2}, {8, 4}, {0, 1}, {5, 1}, {3, 3}]
+>                   // sort based on decreasing position
+>                   // cars[0] is most closer to target, and car[n-1] is most far
+>
+>                   cars = [{10, 2}, {8, 4}, {5, 1}, {3, 3}, {0, 1}]
+>                   time = {1, 1, 7, 3, 12}
+>
+>                   initially stack<int> fleets = {}
+>                   
+>                   At i = 0; time = 1,  stack is empty so fleets = {1}
+>                   At i = 1; time = 1,  which is <= st.top() ==> no new fleet
+>                   At i = 2; time = 7,  which is > st.top() ==> new fleet ==> fleets = {1, 7}
+>                   At i = 3; time = 3,  which is <= st.top() ==> no new fleet
+>                   At i = 4; time = 12, which is > st.top() ==> new fleet => fleets = {1, 7, 12}
+
+```cpp
+int carFleet(int target, vector<int>& position, vector<int>& speed) {
+    int n = position.size();
+    vector<pair<int,int>> cars(n);
+
+    for(int i=0; i<n; i++) cars[i] = {position[i], speed[i]};
+    sort(cars.rbegin(), cars.rend());
+
+    stack<double> st;
+    
+    for(auto [pos, sp] : cars) {
+        double time = (double)(target-pos)/sp;
+
+        // car behind takes more time 
+        // so car behind never catches up with ahead car
+        // creates new fleet
+        if(st.empty() || time > st.top()) {
+            st.push(time);
+        }
+        // else
+        // car which is behind takes less time 
+        // so they join car ahead of them -> no creating new fleet
+    }
+
+    return st.size();
+}
+```
