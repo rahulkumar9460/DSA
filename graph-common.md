@@ -29,3 +29,6 @@ Minimum Obstacle Removal
 Shortest Path Visiting All Nodes
 Race Car
 Swim in Rising Water
+
+
+2858. Minimum Edge Reversals So Every Node Is Reachable
