@@ -155,3 +155,41 @@ Count numbers with digit sum K
 Numbers <= N without consecutive ones
 
 If you want I can give exact LC list.
+
+
+LIS ⭐⭐⭐⭐⭐
+Variants
+Number of LIS
+Largest Divisible Subset
+Longest String Chain
+Longest Arithmetic Subsequence
+Minimum Removals to Make Mountain Array
+
+LCS
+Longest Common Subsequence ⭐⭐⭐⭐⭐
+Direct Variants
+Uncrossed Lines
+Delete Operation for Two Strings
+Minimum ASCII Delete Sum
+Shortest Common Supersequence
+
+Edit Distance ⭐⭐⭐⭐⭐
+Related
+Delete Operation
+Minimum ASCII Delete Sum
+
+take or skip
+Distinct Subsequences ⭐⭐⭐⭐⭐
+Related
+Arithmetic Slices II
+
+palindrome
+Longest Palindromic Subsequence ⭐⭐⭐⭐⭐
+Variants
+Minimum Insertions to Make Palindrome
+Maximize Palindrome Length
+
+Counting Subsequences Family (Advanced)
+Number of LIS
+Arithmetic Slices II
+
