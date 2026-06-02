@@ -6,6 +6,8 @@ Open the Lock
 Sliding Puzzle
 Shortest Path Visiting All Nodes
 
+Map of Highest Peak
+
 # Edge Weights are ONLY 0 or 1 -- 0-1 BFS
 
 Minimum Obstacle Removal
@@ -16,6 +18,13 @@ Network Delay Time
 Swim in Rising Water
 Path With Minimum Effort
 Cheapest Flights
+Path With Maximum Probability
+Number of Ways to Arrive at Destination
+Shortest Path to Get All Keys
+Minimum Cost to Reach Destination in Time
+Minimum Cost to Make at Least One Valid Path in a Grid
+Trapping Rain Water II
+The Maze II
 
 # Negative Weights -- Bellman Ford / SPFA
 
@@ -29,6 +38,26 @@ Minimum Obstacle Removal
 Shortest Path Visiting All Nodes
 Race Car
 Swim in Rising Water
+
+
+
+Extremely Good Google Prep
+Word Ladder II
+Escape a Large Maze
+The Maze III
+Redundant Connection II
+Frog Jump
+Grid Illumination
+Making A Large Island
+Find Minimum Time to Reach Last Room II
+
+
+Hard State Graphs
+Shortest Path Visiting All Nodes
+Cat and Mouse
+Minimum Number of Flips to Convert Binary Matrix to Zero Matrix
+Sliding Puzzle
+Zuma Game
 
 
 2858. Minimum Edge Reversals So Every Node Is Reachable
