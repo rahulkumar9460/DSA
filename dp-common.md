@@ -193,3 +193,33 @@ Counting Subsequences Family (Advanced)
 Number of LIS
 Arithmetic Slices II
 
+
+
+### Grid dp
+
+# Type 1: Count Paths
+62. Unique Paths
+63. Unique Paths II
+
+# Type 2: Minimum Cost Path
+64. Minimum Path Sum
+120. Triangle
+931. Minimum Falling Path Sum
+
+# Type 3: Local Expansion DP
+221. Maximal Square
+1277. Count Square Submatrices
+1139. Largest 1-Bordered Square
+
+# Type 4: Falling Path DP
+931. Minimum Falling Path Sum
+1289. Minimum Falling Path Sum II
+
+# Type 5: Multi-Agent Grid DP
+1463. Cherry Pickup II
+741. Cherry Pickup
+
+# Type 6: Grid DP + State Compression
+1937. Maximum Number of Points with Cost
+1594. Maximum Non-Negative Product
+1301. Number of Paths with Max Score
