@@ -541,3 +541,367 @@ public:
     }
 };
 ```
+
+---
+
+# CASE 3: Important problems:
+
+## 1. Word Search
+[Leetcode link](https://leetcode.com/problems/word-search/description/)
+
+Given an m x n grid of characters board and a string word, return true if word exists in the grid.
+
+The word can be constructed from letters of sequentially adjacent cells, where adjacent cells are 
+horizontally or vertically neighboring. The same letter cell may not be used more than once.
+
+- Input: board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "ABCCED"
+- Output: true
+
+### Intuition
+> [!IMPORTANT]
+> Start from some node (i, j)
+>
+> Explore one neighbour, and mark it visited
+>
+> If not found then unmark it visited and explore remianing neighbours
+
+```cpp
+class Solution {
+public:
+    int n;
+    int m;
+    vector<vector<int>> dir;
+
+    bool solve(vector<vector<char>>& board, string &word, int i, int j, int idx) {
+        if(idx == word.size()) return true;
+        
+        for(auto &d : dir) {
+            int x = i + d[0];
+            int y = j + d[1];
+            if(x<0 || y<0 || x>=n || y>=m) continue;
+            if(board[x][y] != word[idx]) continue;
+
+            char c = board[i][j];
+            board[i][j] = '*';
+
+            if(solve(board, word, x, y, idx+1))
+                return true;
+
+            board[i][j] = c;
+        }
+
+        return false;
+    }
+
+    bool exist(vector<vector<char>>& board, string word) {
+        /*
+            Start from some (i, j)
+            mark (i, j) visited
+            try to find solution
+            if not found
+                mark (i, j) un-visited
+                try some other (i, j)
+        */
+        n = board.size();
+        m = board[0].size();
+        dir = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};
+
+        for(int i=0; i<n; i++) {
+            for(int j=0; j<m; j++) {
+                if(board[i][j] == word[0]) {
+                    char c = board[i][j];
+                    board[i][j] = '*';
+                    if(solve(board, word, i, j, 1))
+                        return true;
+                    
+                    board[i][j] = c;
+                }    
+            }
+        }
+        
+        return false;
+    }
+};
+```
+
+---
+
+## 2. N-Queens
+[Leetcode link](https://leetcode.com/problems/n-queens/description/)
+
+The n-queens puzzle is the problem of placing n queens on an n x n chessboard such 
+that no two queens attack each other.
+
+Given an integer n, return all distinct solutions to the n-queens puzzle. 
+You may return the answer in any order.
+
+Each solution contains a distinct board configuration of the n-queens' placement, 
+where 'Q' and '.' both indicate a queen and an empty space, respectively.
+
+- Input: n = 4
+- Output: [[".Q..","...Q","Q...","..Q."],["..Q.","Q...","...Q",".Q.."]]
+- Explanation: There exist two distinct solutions to the 4-queens puzzle as shown above
+
+### Intuition
+> [!IMPORTANT]
+> For each row we have n choices to place queeen
+> 
+> We place a queen in row and move to next row
+> 
+> Place a queen in a row at some location
+>            Now check if valid placement:
+>                1. that column should not have queen
+>                2. those two digonal's should not have queen
+>
+> We can store column number in a set where queen is placed
+>
+>               There are two digonals:
+>                   left to right 
+>                   right to left
+>
+> to check if a diagonal has queen or not
+>            left to right:
+>            a digonal look like: {(0, 1), (1, 2), (2, 3)}
+>                             or: {(1, 0), {2, 1}}
+>                             or: {(2, 0), (3, 1)}
+>           so this digonal can be identified with a-b  
+>
+>            right to left:
+>            a digonal look like: {(0, 3), (1, 2), (2, 1), (3, 0)}
+>                             or: {(1, 3), (2, 2), (3, 1)}
+>           so this digonal can be identified with a+b
+
+```cpp
+class Solution {
+public:
+    vector<vector<string>> ans;
+    vector<string> temp;
+    unordered_set<int> col, leftDia, rightDia;
+    string emptyRow;
+
+    void solve(int &n, int idx) {
+        if(idx == n) {
+            ans.push_back(temp);
+            return;
+        }
+
+        for(int j=0; j<n; j++) {
+            if(col.count(j) || leftDia.count(idx-j) || rightDia.count(idx+j))
+                continue;
+            
+            string row = this->emptyRow;
+            row[j] = 'Q';
+
+            temp.push_back(row);
+            col.insert(j);
+            leftDia.insert(idx-j);
+            rightDia.insert(idx+j);
+
+            solve(n, idx+1);
+
+            temp.pop_back();
+            col.erase(j);
+            leftDia.erase(idx-j);
+            rightDia.erase(idx+j);
+        }
+
+    }
+
+    vector<vector<string>> solveNQueens(int n) {
+        for(int i=0; i<n; i++)
+            emptyRow += '.';
+        
+        solve(n, 0);
+
+        return ans;
+    }
+};
+```
+
+---
+
+## 3. Sudoku Solver
+[Leetcode link](https://leetcode.com/problems/sudoku-solver/description/)
+
+Write a program to solve a Sudoku puzzle by filling the empty cells.
+
+A sudoku solution must satisfy all of the following rules:
+
+Each of the digits 1-9 must occur exactly once in each row.
+Each of the digits 1-9 must occur exactly once in each column.
+Each of the digits 1-9 must occur exactly once in each of the 9 3x3 sub-boxes of the grid.
+The '.' character indicates empty cells.
+
+### Intuition
+> [!IMPORTANT]
+> solve sudoku row by row, one col at a time
+>
+>            to check a digit is already in column:
+>                map<col_id, set<int>> colMp
+>            
+>            to check a digit is already in row:
+>                map<row_id, set<int>> rowMp
+>            
+>            to check a digit is already in subgrid
+>                for example: (0, 0) ==> (0, 0), (0, 1), (0, 2)...(2, 1), (2, 2)
+>                             (0, 3) ==> (0, 3), (0, 4), (0, 5)...(2, 4), (2, 5)
+>                             (6, 6) ==> (6, 6), (6, 7), (6, 8)...(8, 7), (8, 8)
+>
+>                    for (a, b) subgrid can be indentified with (a/3, b/3)
+>                
+>                use map<pair<int,int>, set<int>> subGridMp
+
+```cpp
+class Solution {
+public:
+    map<int, set<char>> colMp, rowMp;
+    map<pair<int, int>, set<char>> subGridMp;
+
+    bool solve(vector<vector<char>>& board, int i, int j) {
+        if(i == 9) return true;
+
+        if(j == 9) return solve(board, i+1, 0);
+
+        if(board[i][j] != '.') return solve(board, i, j+1); // already a number is there
+
+        for(char c='1'; c<='9'; c++) {      // at (i, j) we have nice choices to fill 
+            if(rowMp[i].count(c) || colMp[j].count(c)) continue;
+
+            int a = i/3, b = j/3;
+            if(subGridMp[{a, b}].count(c)) continue;
+
+            board[i][j] = c;
+            rowMp[i].insert(c);
+            colMp[j].insert(c);
+            subGridMp[{a, b}].insert(c);
+
+            if (solve(board, i, j+1))
+                return true;
+            
+            board[i][j] = '.';
+            rowMp[i].erase(c);
+            colMp[j].erase(c);
+            subGridMp[{a, b}].erase(c);
+        }
+
+        return false;
+    }
+
+    void solveSudoku(vector<vector<char>>& board) {
+
+        for(int i=0; i<9; i++) {
+            for(int j=0; j<9; j++) {
+                if(board[i][j] == '.') continue;
+
+                rowMp[i].insert(board[i][j]);
+                colMp[j].insert(board[i][j]);
+
+                int a = i/3, b = j/3;
+                subGridMp[{a, b}].insert(board[i][j]);
+            }
+        }
+
+        solve(board, 0, 0);
+
+        return;
+    }
+};
+```
+
+---
+
+## 4. Expression Add Operators
+[Leetcode link](https://leetcode.com/problems/expression-add-operators/description/)
+
+Given a string num that contains only digits and an integer target, return all possibilities to 
+insert the binary operators '+', '-', and/or '*' between the digits of num so that the resultant 
+expression evaluates to the target value.
+
+Note that operands in the returned expressions should not contain leading zeros.
+
+Note that a number can contain multiple digits.
+
+ 
+
+Example 1:
+- Input: num = "123", target = 6
+- Output: ["1*2*3","1+2+3"]
+
+Example 2:
+- Input: num = "232", target = 8
+- Output: ["2*3+2","2+3*2"]
+
+### Intuition
+> [!IMPORTANT]
+> generate all Possible permutations
+>
+>           Check if it evaluates to target
+>           time would be (n*n!)
+>
+> Can we compute the expression on the go?
+>
+>           If we just add '+' or '-', we can compute on go
+>           If we add '*' then we need the previous operand as well
+>
+>           lets say currValue is evaluated value till index idx
+>           and prevOperand is the number we used last time
+>
+>           Now we have currNum and before it we need to put one sign + - or *
+>
+>            for + : currValue + currNum, and prevOperand becomes currNum
+>            for - : currValue - currNum, and prevOperand becomes -currNum
+>
+>            for * : currValue - prevOperand + (prevOperand*currNum), prevOperand becoms = prevOperand*currNum
+>
+>            this way time complexity reduces to O(n!)
+
+```cpp
+class Solution {
+public:
+    vector<string> ans;
+    long long target;
+
+    void solve(string &num, int idx, long long currValue, long long prevOperand, string temp) {
+        if(idx == num.size()) {
+            if(currValue == target)
+                ans.push_back(temp);
+            return;
+        }
+
+        long long currNum = 0;
+        for(int i=idx; i<num.size(); i++) {
+            if(i > idx && num[idx] == '0') break; // we dont want 09 -- leading zeros
+
+            currNum = currNum*10 + (num[i]-'0');
+            string currStr = num.substr(idx, i-idx+1);
+
+            if(idx == 0) {
+                solve(num, i+1, currNum, currNum, currStr);
+            }
+
+            else {
+                solve(num, i+1, currValue+currNum, currNum, temp+"+"+currStr);
+
+                solve(num, i+1, currValue-currNum, -currNum, temp+"-"+currStr);
+
+                solve(num, i+1, currValue-prevOperand+(prevOperand*currNum), prevOperand*currNum, temp+"*"+currStr);
+            }
+        }
+    }
+
+    vector<string> addOperators(string num, int target) {
+        /*
+            target, prevDigit, idx
+        */
+        this->target = target;
+
+        solve(num, 0, 0, 0, "");
+
+        return ans;
+    }
+};
+```
+
+
+
+
